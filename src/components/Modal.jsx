@@ -1,7 +1,5 @@
 import React from 'react';
 import { X, AlertTriangle, Trash2 } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
-import { useLanguage } from '../contexts/LanguageContext';
 
 const Modal = ({ 
     isOpen, 
@@ -14,8 +12,6 @@ const Modal = ({
     type = 'danger',
     icon: Icon = AlertTriangle
 }) => {
-    const { t } = useLanguage();
-
     if (!isOpen) return null;
 
     const handleBackdropClick = (e) => {
@@ -51,13 +47,13 @@ const Modal = ({
                         className="btn btn-secondary modal-btn-cancel"
                         onClick={onClose}
                     >
-                        {t(cancelText)}
+                        {cancelText}
                     </button>
                     <button 
                         className={`btn modal-btn-confirm modal-btn-${type}`}
                         onClick={handleConfirm}
                     >
-                        {t(confirmText)}
+                        {confirmText}
                     </button>
                 </div>
             </div>
@@ -72,8 +68,6 @@ export const DeleteModal = ({
     itemCount, 
     itemType = 'items' 
 }) => {
-    const { t } = useLanguage();
-    
     const title = itemCount > 1 
         ? `Delete ${itemCount} ${itemType}` 
         : `Delete ${itemType}`;

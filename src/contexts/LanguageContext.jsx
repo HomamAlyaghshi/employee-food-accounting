@@ -38,7 +38,8 @@ const translations = {
         avgOrderValue: 'Avg Order Value',
         avgItemPrice: 'Avg Item Price',
         orderHistory: 'Order History',
-        qty: 'Qty'
+        qty: 'Qty',
+        settings: 'Settings'
     },
     ar: {
         title: 'نظام محاسبة طعام الموظفين',
@@ -77,7 +78,8 @@ const translations = {
         avgOrderValue: 'متوسط قيمة الطلب',
         avgItemPrice: 'متوسط سعر العنصر',
         orderHistory: 'سجل الطلبات',
-        qty: 'كمية'
+        qty: 'كمية',
+        settings: 'الإعدادات'
     }
 };
 

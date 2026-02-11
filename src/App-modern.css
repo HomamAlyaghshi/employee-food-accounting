@@ -743,6 +743,198 @@ body.dark-mode .employee-total-card .employee-name {
   color: var(--text-primary);
 }
 
+/* Settings Page Styles */
+.settings-page {
+    min-height: 100vh;
+    background: var(--background);
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg) 0;
+}
+
+.settings-header h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.settings-content {
+    display: grid;
+    gap: var(--space-xl);
+}
+
+.storage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border);
+}
+
+.storage-header h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+}
+
+.storage-info {
+    margin-bottom: var(--space-lg);
+}
+
+.info-card {
+    background: var(--background);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--primary);
+}
+
+.info-card h4 {
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--text-primary);
+}
+
+.info-card p {
+    margin: var(--space-xs) 0;
+    color: var(--text-secondary);
+}
+
+.storage-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.action-group h4 {
+    margin: 0 0 var(--space-md) 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.backups-list {
+    margin-top: var(--space-xl);
+}
+
+.backups-list h4 {
+    margin: 0 0 var(--space-lg) 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.backups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+}
+
+.backup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    transition: all 0.2s ease;
+}
+
+.backup-card:hover {
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-md);
+}
+
+.backup-info h5 {
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.backup-info p {
+    margin: var(--space-xs) 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.backup-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+/* Dark mode for settings page */
+body.dark-mode .settings-page {
+    background: var(--background);
+}
+
+body.dark-mode .settings-header h2 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .storage-header {
+    border-color: var(--border);
+}
+
+body.dark-mode .storage-header h3 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .info-card {
+    background: var(--surface);
+    border-left-color: var(--primary);
+}
+
+body.dark-mode .info-card h4 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .info-card p {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .action-group h4,
+body.dark-mode .backups-list h4 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .backup-card {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+body.dark-mode .backup-card:hover {
+    border-color: var(--primary-light);
+}
+
+body.dark-mode .backup-info h5 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .backup-info p {
+    color: var(--text-secondary);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {

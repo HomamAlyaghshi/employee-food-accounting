@@ -12,7 +12,7 @@ import FoodTable from './components/FoodTable';
 import EmployeeTotals from './components/EmployeeTotals';
 import DetailedStats from './components/DetailedStats';
 import AnalyticsPage from './components/AnalyticsPage';
-import StorageManager from './components/StorageManager';
+import SettingsPage from './components/SettingsPage';
 import { DeleteModal } from './components/Modal';
 
 import { useFoodItems } from './hooks/useFoodItems';
@@ -31,7 +31,7 @@ const App = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
 
-    const { foodItems, addFoodItems, removeFoodItem, removeMultipleItems, updateFoodItem, clearAllFoodItems, importData, exportData } = useFoodItems();
+    const { foodItems, addFoodItems, removeFoodItem, removeMultipleItems, updateFoodItem, clearAllFoodItems, importData } = useFoodItems();
     const { 
         itemRows, 
         updateItemRow, 
@@ -219,11 +219,15 @@ const App = () => {
                         )}
                     </main>
                     
-                    <StorageManager
-                        foodItems={foodItems}
-                        onImportData={handleImportData}
-                        onClearData={handleClearData}
-                    />
+                    {currentPage === 'settings' && (
+                        <SettingsPage
+                            foodItems={foodItems}
+                            onImportData={handleImportData}
+                            onClearData={handleClearData}
+                            onNavigateBack={() => setCurrentPage('home')}
+                            currentPage={currentPage === 'settings' ? 'home' : 'analytics'}
+                        />
+                    )}
                     
                     <DeleteModal
                         isOpen={isModalOpen}

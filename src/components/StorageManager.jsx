@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Download, Upload, Database, Trash2, RefreshCw, Info } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { storage, backup, exportToFile, importFromFile } from '../utils/storage';
 
 const StorageManager = ({ foodItems, onImportData, onClearData }) => {
-    const { t } = useLanguage();
     const [isImporting, setIsImporting] = useState(false);
     const [storageInfo, setStorageInfo] = useState(null);
     const [backups, setBackups] = useState([]);
