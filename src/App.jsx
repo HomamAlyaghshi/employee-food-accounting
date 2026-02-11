@@ -12,7 +12,6 @@ import FoodTable from './components/FoodTable';
 import EmployeeTotals from './components/EmployeeTotals';
 import DetailedStats from './components/DetailedStats';
 import AnalyticsPage from './components/AnalyticsPage';
-import SettingsPage from './components/SettingsPage';
 import { DeleteModal } from './components/Modal';
 
 import { useFoodItems } from './hooks/useFoodItems';
@@ -219,15 +218,7 @@ const App = () => {
                         )}
                     </main>
                     
-                    {currentPage === 'settings' && (
-                        <SettingsPage
-                            foodItems={foodItems}
-                            onImportData={handleImportData}
-                            onClearData={handleClearData}
-                            onNavigateBack={() => setCurrentPage('home')}
-                            currentPage={currentPage === 'settings' ? 'home' : 'analytics'}
-                        />
-                    )}
+                   
                     
                     <DeleteModal
                         isOpen={isModalOpen}

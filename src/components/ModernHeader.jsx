@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moon, Sun, Globe, Trash2, BarChart3, Home, Settings } from 'lucide-react';
+import { Moon, Sun, Globe, Trash2, BarChart3, Home } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -16,15 +16,17 @@ const ModernHeader = ({
     const navItems = [
         { id: 'home', icon: Home, label: t('foodItems') },
         { id: 'analytics', icon: BarChart3, label: t('analytics') },
-        { id: 'settings', icon: Settings, label: 'Settings' }
     ];
 
     return (
         <header className="modern-header">
             <div className="header-content">
                 <div className="header-title">
-                    <h1>{t('title')}</h1>
-                    <p>{t('subtitle')}</p>
+                    <img src="/logo.png" alt="يلا فطور - Yalla Breakfast" className="header-logo" />
+                    <div className="header-text">
+                        <h1>{t('title')}</h1>
+                        <p>{t('subtitle')}</p>
+                    </div>
                 </div>
                 
                 <div className="header-actions">

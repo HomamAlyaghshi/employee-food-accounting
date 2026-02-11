@@ -68,7 +68,7 @@ const AnalyticsPage = ({ foodItems }) => {
                 <h2>{t('analytics')}</h2>
                 <div className="analytics-summary">
                     <div className="summary-card">
-                        <h3>Total Items</h3>
+                        <h3>{t('totalItems')}</h3>
                         <p>{foodItems.length}</p>
                     </div>
                     <div className="summary-card">
@@ -76,7 +76,7 @@ const AnalyticsPage = ({ foodItems }) => {
                         <p>${grandTotal.toFixed(2)}</p>
                     </div>
                     <div className="summary-card">
-                        <h3>Employees</h3>
+                        <h3>{t('employees')}</h3>
                         <p>{Object.keys(employeeTotalsMap).length}</p>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
-# Employee Food Accounting System - Modern React Application
+# يلا فطور - Yalla Breakfast - Employee Food Accounting System
 
-A modern, professional food expense tracking application built with React, featuring a beautiful SaaS-style design with comprehensive functionality.
+A modern, professional food expense tracking application built with React, featuring a beautiful SaaS-style design with comprehensive functionality. "يلا فطور" (Yalla Breakfast) is designed to help teams track their breakfast and meal expenses efficiently.
 
 ## 🎨 Design & Features
 
@@ -39,7 +39,7 @@ A modern, professional food expense tracking application built with React, featu
 1. **Clone the repository**
    ```bash
    git clone https://github.com/HomamAlyaghshi/employee-food-accounting.git
-   cd employee-food-accounting
+   cd yalla-breakfast
    ```
 
 2. **Install dependencies**
@@ -63,7 +63,7 @@ npm run build
 ## 📁 Project Structure
 
 ```
-employee-food-accounting/
+yalla-breakfast/
 ├── public/                 # Static files
 ├── src/
 │   ├── components/        # React components

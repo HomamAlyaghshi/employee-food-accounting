@@ -1,7 +1,7 @@
 {
-  "name": "employee-food-accounting",
+  "name": "yalla-breakfast",
   "version": "1.0.0",
-  "description": "Employee Food Accounting System - React Version",
+  "description": "يلا فطور - Employee Food Accounting System - Modern React Application",
   "private": true,
   "dependencies": {
     "lucide-react": "^0.563.0",
