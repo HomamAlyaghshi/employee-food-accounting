@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Food Accounting System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Employee Food Accounting System</h1>
+            <p>Track food expenses by employee</p>
+        </header>
+
+        <main>
+            <section class="form-section">
+                <h2>Add Food Items</h2>
+                <form id="foodForm" class="food-form">
+                    <div class="employee-section">
+                        <div class="form-group">
+                            <label for="employeeName">Employee Name</label>
+                            <select id="employeeName" name="employeeName" required>
+                                <option value="">Select Employee...</option>
+                                <option value="همام اليغشي">همام اليغشي</option>
+                                <option value="زياد المدور">زياد المدور</option>
+                                <option value="جودي الايوبي">جودي الايوبي</option>
+                                <option value="براء الناصيف">براء الناصيف</option>
+                                <option value="عقبة جاموس">عقبة جاموس</option>
+                                <option value="حسام الاحمد">حسام الاحمد</option>
+                                <option value="بيان السد اللحام">بيان السد اللحام</option>
+                                <option value="رزان الخن">رزان الخن</option>
+                                <option value="امينة اللحام">امينة اللحام</option>
+                                <option value="سدرة اليغشي">سدرة اليغشي</option>
+                                <option value="مها رباح">مها رباح</option>
+                                <option value="عدنان الحوري">عدنان الحوري</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="items-section">
+                        <h3>Food Items</h3>
+                        <div id="itemsContainer">
+                            <div class="item-row" data-item-id="1">
+                                <div class="form-group">
+                                    <label for="foodItem_1">Food Item Name</label>
+                                    <input type="text" id="foodItem_1" name="foodItem" class="food-item-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity_1">Quantity</label>
+                                    <input type="number" id="quantity_1" name="quantity" class="quantity-input" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pricePerItem_1">Price per Item ($)</label>
+                                    <input type="number" id="pricePerItem_1" name="pricePerItem" class="price-input" min="0" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button type="button" class="btn btn-remove" onclick="removeItemRow(1)" style="display: none;">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="item-actions">
+                            <button type="button" class="btn btn-secondary" onclick="addItemRow()">+ Add Another Item</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add All Items</button>
+                        <button type="button" class="btn btn-reset" onclick="resetForm()">Clear Form</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-section">
+                <h2>Food Items</h2>
+                <div class="table-container">
+                    <table id="foodTable" class="food-table">
+                        <thead>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Food Item</th>
+                                <th>Quantity</th>
+                                <th>Price per Item</th>
+                                <th>Total Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Table rows will be added dynamically -->
+                        </tbody>
+                    </table>
+                    <div id="emptyMessage" class="empty-message">
+                        No food items added yet. Add your first item above!
+                    </div>
+                </div>
+            </section>
+
+            <section class="totals-section">
+                <h2>Employee Statistics</h2>
+                <div class="stats-controls">
+                    <button class="btn btn-secondary" onclick="showEmployeeStats()">Show Detailed Stats</button>
+                    <button class="btn btn-secondary" onclick="exportEmployeeData()">Export Data</button>
+                </div>
+                <div id="employeeTotals" class="employee-totals">
+                    <!-- Employee totals will be displayed here -->
+                </div>
+                <div class="grand-total">
+                    <strong>Grand Total: $<span id="grandTotal">0.00</span></strong>
+                </div>
+            </section>
+            
+            <section class="statistics-section" id="statisticsSection" style="display: none;">
+                <h2>Detailed Employee Statistics</h2>
+                <div id="detailedStats" class="detailed-stats">
+                    <!-- Detailed statistics will be displayed here -->
+                </div>
+                <button class="btn btn-secondary" onclick="hideEmployeeStats()">Hide Stats</button>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
