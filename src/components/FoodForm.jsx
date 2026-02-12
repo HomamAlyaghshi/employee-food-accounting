@@ -13,7 +13,9 @@ const FoodForm = ({
     onRemoveItemRow,
     onSubmit,
     onReset,
-    showRemoveButtons
+    showRemoveButtons,
+    deliveryFee,
+    onDeliveryFeeChange
 }) => {
     return (
         <div className="card form-section">
@@ -34,6 +36,20 @@ const FoodForm = ({
                                 <option key={employee} value={employee}>{employee}</option>
                             ))}
                         </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="deliveryFee">Delivery Fee</label>
+                        <input
+                            type="number"
+                            id="deliveryFee"
+                            value={deliveryFee}
+                            onChange={(e) => onDeliveryFeeChange(parseFloat(e.target.value) || 0)}
+                            className="form-control"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00"
+                        />
+                        <small className="form-help">This fee will be divided equally among all employees in this order</small>
                     </div>
                 </div>
                 

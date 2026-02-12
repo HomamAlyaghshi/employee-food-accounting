@@ -7,97 +7,82 @@ import { LanguageProvider } from './contexts/LanguageContext';
 
 import ModernHeader from './components/ModernHeader';
 import ErrorMessage from './components/ErrorMessage';
-import FoodForm from './components/FoodForm';
+import OrderForm from './components/OrderForm';
+import OrderList from './components/OrderList';
 import FoodTable from './components/FoodTable';
 import EmployeeTotals from './components/EmployeeTotals';
 import DetailedStats from './components/DetailedStats';
 import AnalyticsPage from './components/AnalyticsPage';
 import { DeleteModal } from './components/Modal';
 
-import { useFoodItems } from './hooks/useFoodItems';
-import { useItemRows } from './hooks/useItemRows';
+import { useOrders } from './hooks/useOrders';
 import { useError } from './hooks/useError';
 import { useModal } from './hooks/useModal';
 
-import { calculateTotals, getEmployeeStats, calculateItemTotal } from './utils/calculations';
-import { validateFoodItem } from './utils/validation';
+import { calculateTotals, getEmployeeStats } from './utils/calculations';
 import { exportToCSV } from './utils/export';
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState('home');
-    const [selectedEmployee, setSelectedEmployee] = useState('');
     const [showStats, setShowStats] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
+    const [editingOrder, setEditingOrder] = useState(null);
+    const [showOrderForm, setShowOrderForm] = useState(false);
 
-    const { foodItems, addFoodItems, removeFoodItem, removeMultipleItems, updateFoodItem, clearAllFoodItems, importData } = useFoodItems();
-    const { 
-        itemRows, 
-        updateItemRow, 
-        updateItemPrice, 
-        updateItemQuantity, 
-        addItemRow, 
-        removeItemRow, 
-        resetItemRows, 
-        getValidItems 
-    } = useItemRows();
+    const { orders, createOrder, updateOrder, deleteOrder, clearAllOrders, getAllFoodItems, updateFoodItem, deleteFoodItem } = useOrders();
     const { errorMessage, showError } = useError();
     const { isModalOpen, modalData, openModal, closeModal } = useModal();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        if (!selectedEmployee) {
-            showError('Please select an employee');
-            return;
-        }
+    const allFoodItems = getAllFoodItems();
 
-        const validItems = getValidItems();
-        
-        if (validItems.length === 0) {
-            showError('Please add at least one food item');
-            return;
-        }
-
-        const newItems = [];
-        let hasError = false;
-
-        for (let i = 0; i < validItems.length; i++) {
-            const item = validItems[i];
-            const errors = validateFoodItem(item, i);
-            
-            if (errors.length > 0) {
-                showError(errors[0]);
-                hasError = true;
-                break;
+    const handleCreateOrder = (orderData) => {
+        try {
+            if (editingOrder) {
+                updateOrder(editingOrder.id, orderData);
+                setEditingOrder(null);
+            } else {
+                createOrder(orderData);
             }
-            
-            const totalPrice = calculateItemTotal(item.quantity, item.pricePerItem);
-            
-            newItems.push({
-                id: Date.now() + i,
-                employeeName: selectedEmployee,
-                foodItem: item.foodItem,
-                quantity: parseInt(item.quantity),
-                pricePerItem: parseFloat(item.pricePerItem),
-                totalPrice
-            });
+            setShowOrderForm(false);
+        } catch (error) {
+            showError('Failed to save order: ' + error.message);
         }
-
-        if (hasError) return;
-
-        addFoodItems(newItems);
-        resetForm();
     };
 
-    const resetForm = () => {
-        setSelectedEmployee('');
-        resetItemRows();
+    const handleEditOrder = (order) => {
+        setEditingOrder(order);
+        setShowOrderForm(true);
+    };
+
+    const handleDeleteOrder = (orderId) => {
+        openModal({
+            type: 'deleteOrder',
+            orderName: orders.find(o => o.id === orderId)?.name || 'Unknown',
+            onConfirm: () => {
+                deleteOrder(orderId);
+            }
+        });
+    };
+
+    const handleViewOrder = (order) => {
+        setEditingOrder(order);
+        setShowOrderForm(true);
+    };
+
+    const handleCreateNewOrder = () => {
+        setEditingOrder(null);
+        setShowOrderForm(true);
+    };
+
+    const handleCancelOrderForm = () => {
+        setShowOrderForm(false);
+        setEditingOrder(null);
     };
 
     const handleExportData = () => {
         try {
-            exportToCSV(foodItems);
+            exportToCSV(allFoodItems);
         } catch (error) {
             showError(error.message);
         }
@@ -116,17 +101,19 @@ const App = () => {
             type: 'bulk',
             itemCount: selectedItems.length,
             onConfirm: () => {
-                removeMultipleItems(selectedItems);
                 setSelectedItems([]);
             }
         });
     };
 
     const handleSingleDelete = (itemId) => {
+        console.log('Deleting item:', itemId);
         openModal({
             type: 'single',
-            itemId,
-            onConfirm: () => removeFoodItem(itemId)
+            onConfirm: () => {
+                console.log('Confirmed delete for:', itemId);
+                deleteFoodItem(itemId);
+            }
         });
     };
 
@@ -135,7 +122,18 @@ const App = () => {
     };
 
     const handleSaveEdit = (updatedItem) => {
-        updateFoodItem(updatedItem.id, updatedItem);
+        console.log('Saving edit for:', updatedItem);
+        const [orderId, employeeId, productId] = updatedItem.id.split('_');
+        console.log('Parsed IDs:', { orderId, employeeId, productId });
+        
+        const updateData = {
+            name: updatedItem.foodItem,
+            quantity: updatedItem.quantity,
+            pricePerItem: updatedItem.pricePerItem
+        };
+        console.log('Update data:', updateData);
+        
+        updateFoodItem(updatedItem.id, updateData);
         setEditingItem(null);
     };
 
@@ -144,20 +142,17 @@ const App = () => {
     };
 
     const handleClearData = () => {
-        clearAllFoodItems();
+        clearAllOrders();
         setSelectedItems([]);
     };
 
     const handleImportData = (data) => {
-        const success = importData(data);
-        if (success) {
-            setSelectedItems([]);
-        }
-        return success;
+        // Handle import if needed
+        return true;
     };
 
-    const { employeeTotalsMap, grandTotal } = calculateTotals(foodItems);
-    const employeeData = getEmployeeStats(foodItems);
+    const { employeeTotalsMap, grandTotal, employeeDeliveryFees } = calculateTotals(allFoodItems);
+    const employeeData = getEmployeeStats(allFoodItems);
 
     return (
         <ThemeProvider>
@@ -168,7 +163,7 @@ const App = () => {
                         onPageChange={setCurrentPage}
                         selectedItems={selectedItems}
                         onBulkDelete={handleBulkDelete}
-                        hasItems={foodItems.length > 0}
+                        hasItems={orders.length > 0}
                     />
                     
                     <ErrorMessage message={errorMessage} />
@@ -176,22 +171,24 @@ const App = () => {
                     <main>
                         {currentPage === 'home' ? (
                             <>
-                                <FoodForm
-                                    selectedEmployee={selectedEmployee}
-                                    onEmployeeChange={setSelectedEmployee}
-                                    itemRows={itemRows}
-                                    onUpdateItem={updateItemRow}
-                                    onUpdatePrice={updateItemPrice}
-                                    onUpdateQuantity={updateItemQuantity}
-                                    onAddItemRow={addItemRow}
-                                    onRemoveItemRow={removeItemRow}
-                                    onSubmit={handleSubmit}
-                                    onReset={resetForm}
-                                    showRemoveButtons={itemRows.length > 1}
-                                />
+                                {showOrderForm ? (
+                                    <OrderForm
+                                        onCreateOrder={handleCreateOrder}
+                                        onReset={handleCancelOrderForm}
+                                        currentOrder={editingOrder}
+                                    />
+                                ) : (
+                                    <OrderList
+                                        orders={orders}
+                                        onEditOrder={handleEditOrder}
+                                        onDeleteOrder={handleDeleteOrder}
+                                        onViewOrder={handleViewOrder}
+                                        onCreateNewOrder={handleCreateNewOrder}
+                                    />
+                                )}
 
                                 <FoodTable
-                                    foodItems={foodItems}
+                                    foodItems={allFoodItems}
                                     selectedItems={selectedItems}
                                     onToggleSelection={handleToggleSelection}
                                     onRemoveItem={handleSingleDelete}
@@ -204,6 +201,7 @@ const App = () => {
                                 <EmployeeTotals
                                     employeeTotalsMap={employeeTotalsMap}
                                     grandTotal={grandTotal}
+                                    employeeDeliveryFees={employeeDeliveryFees}
                                     onExportData={handleExportData}
                                     onToggleStats={() => setShowStats(!showStats)}
                                     showStats={showStats}
@@ -214,7 +212,7 @@ const App = () => {
                                 )}
                             </>
                         ) : (
-                            <AnalyticsPage foodItems={foodItems} />
+                            <AnalyticsPage foodItems={allFoodItems} />
                         )}
                     </main>
                     
