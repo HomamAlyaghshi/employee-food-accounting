@@ -82,7 +82,7 @@ const OrderList = ({
                                     <div className="order-actions">
                                         <button 
                                             className="btn btn-outline btn-sm"
-                                            onClick={() => toggleOrderExpansion(order.id)}
+                                            onClick={() => onViewOrder(order)}
                                             title="View Details"
                                         >
                                             <Eye size={14} />

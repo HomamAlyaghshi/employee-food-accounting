@@ -47,7 +47,14 @@ export const useOrders = () => {
     const updateFoodItem = useCallback((itemId, updatedData) => {
         console.log('updateFoodItem called with:', { itemId, updatedData });
         // Parse the item ID to get order, employee, and product IDs
-        const [orderId, employeeId, productId] = itemId.split('_');
+        // Handle employee names with spaces by finding the last underscore
+        const lastUnderscoreIndex = itemId.lastIndexOf('_');
+        const productId = itemId.substring(lastUnderscoreIndex + 1);
+        const beforeProduct = itemId.substring(0, lastUnderscoreIndex);
+        const firstUnderscoreIndex = beforeProduct.indexOf('_');
+        const orderId = beforeProduct.substring(0, firstUnderscoreIndex);
+        const employeeId = beforeProduct.substring(firstUnderscoreIndex + 1);
+        
         console.log('Parsed IDs in updateFoodItem:', { orderId, employeeId, productId });
         
         const updatedOrders = orders.map(order => {
@@ -91,13 +98,21 @@ export const useOrders = () => {
     const deleteFoodItem = useCallback((itemId) => {
         console.log('deleteFoodItem called with:', itemId);
         // Parse the item ID to get order, employee, and product IDs
-        const [orderId, employeeId, productId] = itemId.split('_');
+        // Handle employee names with spaces by finding the last underscore
+        const lastUnderscoreIndex = itemId.lastIndexOf('_');
+        const productId = itemId.substring(lastUnderscoreIndex + 1);
+        const beforeProduct = itemId.substring(0, lastUnderscoreIndex);
+        const firstUnderscoreIndex = beforeProduct.indexOf('_');
+        const orderId = beforeProduct.substring(0, firstUnderscoreIndex);
+        const employeeId = beforeProduct.substring(firstUnderscoreIndex + 1);
+        
         console.log('Parsed IDs in deleteFoodItem:', { orderId, employeeId, productId });
         
         const updatedOrders = orders.map(order => {
             if (order.id === orderId) {
                 console.log('Found order to update:', order);
                 const updatedEmployees = order.employees.map(employee => {
+                    console.log('Comparing:', employee.employeeId, 'with', employeeId);
                     if (employee.employeeId === employeeId) {
                         console.log('Found employee to update:', employee);
                         const updatedProducts = employee.products.filter(

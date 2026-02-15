@@ -26,11 +26,11 @@ const App = () => {
     const [currentPage, setCurrentPage] = useState('home');
     const [showStats, setShowStats] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
-    const [editingItem, setEditingItem] = useState(null);
     const [editingOrder, setEditingOrder] = useState(null);
     const [showOrderForm, setShowOrderForm] = useState(false);
+    const [isViewMode, setIsViewMode] = useState(false);
 
-    const { orders, createOrder, updateOrder, deleteOrder, clearAllOrders, getAllFoodItems, updateFoodItem, deleteFoodItem } = useOrders();
+    const { orders, createOrder, updateOrder, deleteOrder, clearAllOrders, getAllFoodItems } = useOrders();
     const { errorMessage, showError } = useError();
     const { isModalOpen, modalData, openModal, closeModal } = useModal();
 
@@ -67,17 +67,20 @@ const App = () => {
 
     const handleViewOrder = (order) => {
         setEditingOrder(order);
+        setIsViewMode(true);
         setShowOrderForm(true);
     };
 
     const handleCreateNewOrder = () => {
         setEditingOrder(null);
+        setIsViewMode(false);
         setShowOrderForm(true);
     };
 
     const handleCancelOrderForm = () => {
         setShowOrderForm(false);
         setEditingOrder(null);
+        setIsViewMode(false);
     };
 
     const handleExportData = () => {
@@ -104,41 +107,6 @@ const App = () => {
                 setSelectedItems([]);
             }
         });
-    };
-
-    const handleSingleDelete = (itemId) => {
-        console.log('Deleting item:', itemId);
-        openModal({
-            type: 'single',
-            onConfirm: () => {
-                console.log('Confirmed delete for:', itemId);
-                deleteFoodItem(itemId);
-            }
-        });
-    };
-
-    const handleEditItem = (item) => {
-        setEditingItem(item);
-    };
-
-    const handleSaveEdit = (updatedItem) => {
-        console.log('Saving edit for:', updatedItem);
-        const [orderId, employeeId, productId] = updatedItem.id.split('_');
-        console.log('Parsed IDs:', { orderId, employeeId, productId });
-        
-        const updateData = {
-            name: updatedItem.foodItem,
-            quantity: updatedItem.quantity,
-            pricePerItem: updatedItem.pricePerItem
-        };
-        console.log('Update data:', updateData);
-        
-        updateFoodItem(updatedItem.id, updateData);
-        setEditingItem(null);
-    };
-
-    const handleCancelEdit = () => {
-        setEditingItem(null);
     };
 
     const handleClearData = () => {
@@ -176,6 +144,7 @@ const App = () => {
                                         onCreateOrder={handleCreateOrder}
                                         onReset={handleCancelOrderForm}
                                         currentOrder={editingOrder}
+                                        isViewMode={isViewMode}
                                     />
                                 ) : (
                                     <OrderList
@@ -191,11 +160,6 @@ const App = () => {
                                     foodItems={allFoodItems}
                                     selectedItems={selectedItems}
                                     onToggleSelection={handleToggleSelection}
-                                    onRemoveItem={handleSingleDelete}
-                                    onEditItem={handleEditItem}
-                                    editingItem={editingItem}
-                                    onSaveEdit={handleSaveEdit}
-                                    onCancelEdit={handleCancelEdit}
                                 />
 
                                 <EmployeeTotals

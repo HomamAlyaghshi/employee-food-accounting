@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Plus, Trash2, User, Package } from "lucide-react";
+import { Plus, Trash2, User, Package, X } from "lucide-react";
 import { EMPLOYEES } from "../constants/employees";
 import { useLanguage } from "../contexts/LanguageContext";
 
-const OrderForm = ({ onCreateOrder, onReset, currentOrder }) => {
+const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false }) => {
   const { t } = useLanguage();
 
   const [orderName, setOrderName] = useState(currentOrder?.name || "");
@@ -48,12 +48,14 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder }) => {
     });
   };
 
-  const addProduct = () => {
-    if (!currentEmployee || !currentEmployee.employeeId) {
-      alert("Please select an employee first");
-      return;
+  const removeEmployee = (index) => {
+    setEmployees((prev) => prev.filter((_, i) => i !== index));
+    if (selectedEmployeeIndex >= employees.length - 1) {
+      setSelectedEmployeeIndex(Math.max(0, employees.length - 2));
     }
+  };
 
+  const addProduct = (employeeIndex) => {
     const newProduct = {
       id: Date.now(),
       name: "",
@@ -64,10 +66,9 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder }) => {
 
     setEmployees((prev) => {
       const updated = [...prev];
-      const emp = updated[selectedEmployeeIndex];
-      updated[selectedEmployeeIndex] = {
-        ...emp,
-        products: [...emp.products, newProduct],
+      updated[employeeIndex] = {
+        ...updated[employeeIndex],
+        products: [...updated[employeeIndex].products, newProduct],
       };
       return updated;
     });
@@ -75,114 +76,74 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder }) => {
 
   const updateProduct = (employeeIndex, productIndex, field, value) => {
     setEmployees((prev) => {
-      const updatedEmployees = [...prev];
-      const employee = { ...updatedEmployees[employeeIndex] };
-      const updatedProducts = [...employee.products];
-
-      const updatedProduct = { ...updatedProducts[productIndex], [field]: value };
+      const updated = [...prev];
+      const products = [...updated[employeeIndex].products];
+      products[productIndex] = { ...products[productIndex], [field]: value };
 
       if (field === "quantity" || field === "pricePerItem") {
-        const quantity =
-          field === "quantity"
-            ? parseInt(value, 10) || 1
-            : Number(updatedProduct.quantity) || 1;
-
-        const pricePerItem =
-          field === "pricePerItem"
-            ? parseFloat(value) || 0
-            : Number(updatedProduct.pricePerItem) || 0;
-
-        updatedProduct.quantity = quantity;
-        updatedProduct.pricePerItem = pricePerItem;
-        updatedProduct.totalPrice = quantity * pricePerItem;
+        const quantity = parseInt(products[productIndex].quantity) || 0;
+        const pricePerItem = parseFloat(products[productIndex].pricePerItem) || 0;
+        products[productIndex].totalPrice = quantity * pricePerItem;
       }
 
-      updatedProducts[productIndex] = updatedProduct;
-      employee.products = updatedProducts;
-      updatedEmployees[employeeIndex] = employee;
-      return updatedEmployees;
+      updated[employeeIndex] = { ...updated[employeeIndex], products };
+      return updated;
     });
   };
 
   const removeProduct = (employeeIndex, productIndex) => {
     setEmployees((prev) => {
-      const updatedEmployees = [...prev];
-      const employee = { ...updatedEmployees[employeeIndex] };
-      employee.products = employee.products.filter((_, i) => i !== productIndex);
-      updatedEmployees[employeeIndex] = employee;
-      return updatedEmployees;
+      const updated = [...prev];
+      updated[employeeIndex] = {
+        ...updated[employeeIndex],
+        products: updated[employeeIndex].products.filter((_, i) => i !== productIndex),
+      };
+      return updated;
     });
-  };
-
-  const removeEmployee = (index) => {
-    if (employees.length <= 1) {
-      alert("Order must have at least one employee");
-      return;
-    }
-
-    setEmployees((prev) => prev.filter((_, i) => i !== index));
-
-    if (selectedEmployeeIndex === index) {
-      setSelectedEmployeeIndex(0);
-    } else if (selectedEmployeeIndex > index) {
-      setSelectedEmployeeIndex((i) => i - 1);
-    }
   };
 
   const totals = useMemo(() => {
-    let orderSubtotal = 0;
-    const uniqueEmployees = new Set();
+    const orderSubtotal = employees.reduce((sum, employee) => {
+      return (
+        sum +
+        employee.products.reduce((empSum, product) => {
+          return empSum + (Number(product.totalPrice) || 0);
+        }, 0)
+      );
+    }, 0);
 
-    employees.forEach((employee) => {
-      if (employee.employeeId) {
-        uniqueEmployees.add(employee.employeeId);
-        const employeeSubtotal = (employee.products || []).reduce(
-          (sum, product) => sum + (Number(product.totalPrice) || 0),
-          0
-        );
-        orderSubtotal += employeeSubtotal;
-      }
-    });
-
+    const uniqueEmployees = employees.filter((emp) => emp.employeeId);
     const deliveryTaxPerEmployee =
-      uniqueEmployees.size > 0 ? deliveryFee / uniqueEmployees.size : 0;
+      uniqueEmployees.length > 0 ? deliveryFee / uniqueEmployees.length : 0;
 
-    const totalDeliveryTax = deliveryTaxPerEmployee * uniqueEmployees.size;
     const finalOrderTotal = orderSubtotal + deliveryFee;
 
     return {
       orderSubtotal,
+      uniqueEmployees,
       deliveryTaxPerEmployee,
-      totalDeliveryTax,
       finalOrderTotal,
-      uniqueEmployees: Array.from(uniqueEmployees),
     };
   }, [employees, deliveryFee]);
 
-  // Keep deliveryTax in employees synced (optional). If you don't need it stored, you can remove this.
   useEffect(() => {
-    const per = totals.deliveryTaxPerEmployee;
-    setEmployees((prev) =>
-      prev.map((e) =>
-        e.employeeId ? { ...e, deliveryTax: per } : { ...e, deliveryTax: 0 }
-      )
-    );
+    const updatedEmployees = employees.map((employee) => ({
+      ...employee,
+      deliveryTax: totals.deliveryTaxPerEmployee,
+    }));
+    setEmployees(updatedEmployees);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totals.deliveryTaxPerEmployee]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!orderName.trim()) {
-      alert("Please enter an order name");
-      return;
-    }
 
     const validEmployees = employees.filter(
       (emp) => emp.employeeId && emp.products.length > 0
     );
 
     if (validEmployees.length === 0) {
-      alert("Please add at least one employee with products");
+      alert("Please add at least one employee with products.");
       return;
     }
 
@@ -202,199 +163,160 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder }) => {
     setDeliveryFee(0);
     setEmployees([{ employeeId: "", products: [], deliveryTax: 0 }]);
     setSelectedEmployeeIndex(0);
-    onReset?.();
   };
 
   return (
-    <div className="card order-form">
-      <h2>{currentOrder ? "Edit Order" : "Create New Order"}</h2>
-
+    <div className="card">
+      <div className={`form-header ${isViewMode ? 'view-mode' : (currentOrder ? 'edit-mode' : 'create-mode')}`}>
+        <h2>{isViewMode ? "Order Details" : (currentOrder ? "Edit Order" : "Create New Order")}</h2>
+        {isViewMode && (
+          <button type="button" className="btn btn-ghost btn-sm" onClick={onReset}>
+            <X size={16} />
+          </button>
+        )}
+      </div>
+      
       <form onSubmit={handleSubmit}>
-        <div className="order-header">
-          <div className="form-group">
-            <label htmlFor="orderName">Order Name</label>
-            <input
-              type="text"
-              id="orderName"
-              value={orderName}
-              onChange={(e) => setOrderName(e.target.value)}
-              className="form-control"
-              placeholder="e.g., Lunch Order - Restaurant Name"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="deliveryFee">Delivery Fee</label>
-            <input
-              type="number"
-              id="deliveryFee"
-              value={deliveryFee}
-              onChange={(e) => setDeliveryFee(parseFloat(e.target.value) || 0)}
-              className="form-control"
-              min="0"
-              step="0.01"
-              placeholder="0.00"
-            />
-            <small className="form-help">
-              This will be divided equally among {totals.uniqueEmployees.length} employee(s)
-            </small>
-          </div>
+        <div className="form-group">
+          <label htmlFor="orderName">Order Name</label>
+          <input
+            type="text"
+            id="orderName"
+            value={orderName}
+            onChange={(e) => setOrderName(e.target.value)}
+            className="form-control"
+            placeholder="e.g., Lunch Order - Restaurant Name"
+            disabled={isViewMode}
+            required
+          />
         </div>
 
-        <div className="order-workflow">
-          <div className="employees-section">
-            <div className="section-header">
-              <h3>Employees</h3>
-              <button type="button" className="btn btn-primary btn-sm" onClick={addNewEmployee}>
-                <Plus size={16} />
+        <div className="form-group">
+          <label htmlFor="deliveryFee">Delivery Fee</label>
+          <input
+            type="number"
+            id="deliveryFee"
+            value={deliveryFee}
+            onChange={(e) => setDeliveryFee(parseFloat(e.target.value) || 0)}
+            className="form-control"
+            min="0"
+            step="0.01"
+            disabled={isViewMode}
+          />
+        </div>
+
+        <div className="employees-section">
+          <div className="section-header">
+            <h3>Employees & Products</h3>
+            {!isViewMode && (
+              <button type="button" className="btn btn-secondary btn-sm" onClick={addNewEmployee}>
+                <Plus size={14} />
                 Add Employee
               </button>
-            </div>
+            )}
+          </div>
 
-            <div className="employees-list">
-              {employees.map((employee, empIndex) => (
-                <div
-                  key={empIndex}
-                  className={`employee-card ${selectedEmployeeIndex === empIndex ? "selected" : ""}`}
-                  onClick={() => selectEmployee(empIndex)}
-                >
-                  <div className="employee-header">
-                    <div className="employee-info">
-                      <User size={16} />
-                      <span className="employee-name">
-                        {employee.employeeId || "Select Employee..."}
-                      </span>
+          {employees.map((employee, empIndex) => (
+            <div key={empIndex} className="employee-card">
+              <div className="employee-header">
+                <div className="employee-select">
+                  <User size={16} />
+                  <select
+                    value={employee.employeeId}
+                    onChange={(e) => updateEmployee(empIndex, "employeeId", e.target.value)}
+                    className="form-control"
+                    disabled={isViewMode}
+                    required
+                  >
+                    <option value="">Select Employee</option>
+                    {EMPLOYEES.map((emp) => (
+                      <option key={emp} value={emp}>
+                        {emp}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {!isViewMode && employees.length > 1 && (
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => removeEmployee(empIndex)}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </div>
+
+              <div className="products-section">
+                <div className="products-header">
+                  <h4>Products</h4>
+                  {!isViewMode && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => addProduct(empIndex)}
+                    >
+                      <Plus size={12} />
+                      Add Product
+                    </button>
+                  )}
+                </div>
+
+                {employee.products.map((product, prodIndex) => (
+                  <div key={prodIndex} className="product-row">
+                    <input
+                      type="text"
+                      value={product.name}
+                      onChange={(e) =>
+                        updateProduct(empIndex, prodIndex, "name", e.target.value)
+                      }
+                      className="form-control"
+                      placeholder="Product name"
+                      disabled={isViewMode}
+                      required
+                    />
+                    <input
+                      type="number"
+                      value={product.quantity}
+                      onChange={(e) =>
+                        updateProduct(empIndex, prodIndex, "quantity", e.target.value)
+                      }
+                      className="form-control"
+                      placeholder="Qty"
+                      min="1"
+                      disabled={isViewMode}
+                      required
+                    />
+                    <input
+                      type="number"
+                      value={product.pricePerItem}
+                      onChange={(e) =>
+                        updateProduct(empIndex, prodIndex, "pricePerItem", e.target.value)
+                      }
+                      className="form-control"
+                      placeholder="Price"
+                      min="0"
+                      step="0.01"
+                      disabled={isViewMode}
+                      required
+                    />
+                    <div className="product-total">
+                      ${(product.totalPrice || 0).toFixed(2)}
                     </div>
-
-                    <div className="employee-actions">
-                      <button
-                        type="button"
-                        className="btn btn-outline btn-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          selectEmployee(empIndex);
-                        }}
-                      >
-                        Select
-                      </button>
-
+                    {!isViewMode && (
                       <button
                         type="button"
                         className="btn btn-danger btn-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeEmployee(empIndex);
-                        }}
-                        disabled={employees.length <= 1}
+                        onClick={() => removeProduct(empIndex, prodIndex)}
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={12} />
                       </button>
-                    </div>
+                    )}
                   </div>
-
-                  {selectedEmployeeIndex === empIndex && (
-                    <div className="employee-details">
-                      <div className="employee-selector">
-                        <select
-                          value={employee.employeeId}
-                          onChange={(e) => updateEmployee(empIndex, "employeeId", e.target.value)}
-                          className="form-control"
-                          required
-                        >
-                          <option value="">Select Employee...</option>
-                          {EMPLOYEES.map((emp) => (
-                            <option key={emp} value={emp}>
-                              {emp}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="products-section">
-                        <div className="products-header">
-                          <h4>Products</h4>
-                          <button
-                            type="button"
-                            className="btn btn-outline btn-sm"
-                            onClick={addProduct}
-                            disabled={!employee.employeeId}
-                          >
-                            <Plus size={14} />
-                            Add Product
-                          </button>
-                        </div>
-
-                        <div className="products-list">
-                          {employee.products.map((product, prodIndex) => (
-                            <div key={product.id} className="product-item">
-                              <div className="product-inputs">
-                                <input
-                                  type="text"
-                                  value={product.name}
-                                  onChange={(e) =>
-                                    updateProduct(empIndex, prodIndex, "name", e.target.value)
-                                  }
-                                  className="form-control"
-                                  placeholder="Product name"
-                                  required
-                                />
-
-                                <input
-                                  type="number"
-                                  value={product.quantity}
-                                  onChange={(e) =>
-                                    updateProduct(empIndex, prodIndex, "quantity", e.target.value)
-                                  }
-                                  className="form-control"
-                                  min="1"
-                                  placeholder="Qty"
-                                  required
-                                />
-
-                                <input
-                                  type="number"
-                                  value={product.pricePerItem}
-                                  onChange={(e) =>
-                                    updateProduct(empIndex, prodIndex, "pricePerItem", e.target.value)
-                                  }
-                                  className="form-control"
-                                  min="0"
-                                  step="0.01"
-                                  placeholder="Price"
-                                  required
-                                  style={{ textAlign: "left", direction: "ltr" }}
-                                />
-
-                                <div className="product-total">
-                                  ${Number(product.totalPrice || 0).toFixed(2)}
-                                </div>
-
-                                <button
-                                  type="button"
-                                  className="btn btn-danger btn-sm"
-                                  onClick={() => removeProduct(empIndex, prodIndex)}
-                                >
-                                  <Trash2 size={12} />
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-
-                          {employee.products.length === 0 && (
-                            <div className="empty-products">
-                              <Package size={24} />
-                              <p>No products added yet. Click "Add Product" to start.</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
         </div>
 
         {totals.uniqueEmployees.length > 0 && (
@@ -447,15 +369,17 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder }) => {
           </div>
         )}
 
-        <div className="form-actions">
-          <button type="submit" className="btn btn-primary">
-            {currentOrder ? "Update Order" : "Create Order"}
-          </button>
+        {!isViewMode && (
+          <div className="form-actions">
+            <button type="submit" className="btn btn-primary">
+              {currentOrder ? "Update Order" : "Create Order"}
+            </button>
 
-          <button type="button" className="btn btn-ghost" onClick={handleReset}>
-            Clear Form
-          </button>
-        </div>
+            <button type="button" className="btn btn-ghost" onClick={handleReset}>
+              Clear Form
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );
