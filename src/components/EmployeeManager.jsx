@@ -108,9 +108,10 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
               <p>{t('employees.startByAddingEmployees')}</p>
             </div>
             <button 
-              className="btn btn-ghost btn-sm"
+              className="btn btn-got-it"
               onClick={() => setShowHint(false)}
             >
+              <CheckCircle size={16} />
               {t('employees.gotIt')}
             </button>
           </div>
@@ -144,7 +145,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
           onClick={() => setShowAddForm(true)}
         >
           <UserPlus size={18} />
-          Add Employee
+          {t('common.addEmployee')}
         </button>
       </div>
 
@@ -204,6 +205,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
                 onClick={() => setShowAddForm(true)}
               >
                 <Plus size={16} />
+                {t('employees.addEmployee')}
                 {t('employees.addFirstEmployee')}
               </button>
             )}
@@ -245,7 +247,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
           <div className="proceed-content">
             <div className="proceed-info">
               <h3>{t('employees.readyToCreateOrders')}</h3>
-              <p>{t('employees.employeesInTeam').replace('{count}', employees.length).replace('{plural}', employees.length !== 1 ? 's' : '')}</p>
+              <p>{t('employees.employeesInTeam', { count: employees.length, plural: employees.length !== 1 ? 's' : '' })}</p>
             </div>
             <button 
               className="btn btn-success btn-lg"

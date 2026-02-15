@@ -42,6 +42,8 @@ const translations = {
             restore: 'Restore',
             importing: 'Importing...',
             exportData: 'Export Data',
+            addEmployee: 'Add Employee',
+            employees: 'Employees',
         },
 
         // Navigation
@@ -85,7 +87,20 @@ const translations = {
             bulkDelete: 'Bulk Delete',
             totalAmount: 'Total Amount',
             totalItems: 'Total Items',
-            orderCount: 'Order Count'
+            orderCount: 'Order Count',
+            delivery: 'Delivery',
+            finalTotal: 'Final Total',
+            ordersCount: 'Orders Count',
+            avgOrder: 'Avg Order',
+            avgItem: 'Avg Item',
+            totalCost: 'Total Cost',
+            numberOfOrders: 'Number of Orders',
+            avgOrderValue: 'Avg Order Value',
+            avgItemPrice: 'Avg Item Price',
+            cost: 'Cost',
+            viewDetails: 'View Details',
+            editOrderTooltip: 'Edit Order',
+            deleteOrderTooltip: 'Delete Order'
         },
 
         // Employee Management
@@ -118,6 +133,8 @@ const translations = {
             employeeStatistics: 'Employee Statistics',
             hideDetailedStats: 'Hide Detailed Stats',
             showDetailedStats: 'Show Detailed Stats',
+            pleaseAddAtLeastOneEmployee: 'Please add at least one employee.',
+            detailedEmployeeStatistics: 'Detailed Employee Statistics',
             noEmployeeTotals: 'No employee totals to display',
             employeeTotals: 'Employee Totals',
             grandTotal: 'Grand Total'
@@ -201,6 +218,23 @@ const translations = {
         app: {
             failedToSaveOrder: 'Failed to save order: ',
             unknown: 'Unknown'
+        },
+
+        // Additional missing keys
+        misc: {
+            finalTotal: 'Final Total',
+            viewDetails: 'View Details',
+            editOrderTooltip: 'Edit Order',
+            deleteOrderTooltip: 'Delete Order',
+            employee: 'Employee',
+            product: 'Product',
+            quantity: 'Quantity',
+            price: 'Price',
+            total: 'Total',
+            employeeBreakdown: 'Employee Breakdown',
+            food: 'Food',
+            delivery: 'Delivery',
+            noData: 'No data available'
         }
     },
 
@@ -245,6 +279,8 @@ const translations = {
             restore: 'استعادة',
             importing: 'جاري الاستيراد...',
             exportData: 'تصدير البيانات',
+            addEmployee: 'إضافة موظف',
+            employees: 'الموظفين',
         },
 
         // Navigation
@@ -282,13 +318,20 @@ const translations = {
             clearForm: 'مسح النموذج',
             pleaseAddEmployeeWithProducts: 'يرجى إضافة موظف واحد على الأقل مع منتجات.',
             noOrdersYet: 'لا توجد طلبات بعد. أنشئ طلبك الأول!',
-            viewDetails: 'عرض التفاصيل',
-            editOrderTooltip: 'تعديل الطلب',
-            deleteOrderTooltip: 'حذف الطلب',
             bulkDelete: 'حذف جماعي',
             totalAmount: 'المبلغ الإجمالي',
             totalItems: 'إجمالي العناصر',
-            orderCount: 'عدد الطلبات'
+            orderCount: 'عدد الطلبات',
+            delivery: 'التوصيل',
+            finalTotal: 'الإجمالي النهائي',
+            ordersCount: 'عدد الطلبات',
+            avgOrder: 'متوسط الطلب',
+            avgItem: 'متوسط العنصر',
+            totalCost: 'التكلفة الإجمالية',
+            numberOfOrders: 'عدد الطلبات',
+            avgOrderValue: 'متوسط قيمة الطلب',
+            avgItemPrice: 'متوسط سعر العنصر',
+            cost: 'التكلفة'
         },
 
         // Employee Management
@@ -321,6 +364,8 @@ const translations = {
             employeeStatistics: 'إحصائيات الموظفين',
             hideDetailedStats: 'إخفاء الإحصائيات التفصيلية',
             showDetailedStats: 'عرض الإحصائيات التفصيلية',
+            pleaseAddAtLeastOneEmployee: 'يرجى إضافة موظف واحد على الأقل.',
+            detailedEmployeeStatistics: 'إحصائيات الموظفين التفصيلية',
             noEmployeeTotals: 'لا توجد إجماليات للموظفين لعرضها',
             employeeTotals: 'إجماليات الموظفين',
             grandTotal: 'الإجمالي العام'
@@ -404,6 +449,23 @@ const translations = {
         app: {
             failedToSaveOrder: 'فشل في حفظ الطلب: ',
             unknown: 'غير معروف'
+        },
+
+        // Additional missing keys
+        misc: {
+            finalTotal: 'الإجمالي النهائي',
+            viewDetails: 'عرض التفاصيل',
+            editOrderTooltip: 'تعديل الطلب',
+            deleteOrderTooltip: 'حذف الطلب',
+            employee: 'الموظف',
+            product: 'المنتج',
+            quantity: 'الكمية',
+            price: 'السعر',
+            total: 'الإجمالي',
+            employeeBreakdown: 'تفصيل الموظف',
+            food: 'الطعام',
+            delivery: 'التوصيل',
+            noData: 'لا توجد بيانات'
         }
     }
 };
@@ -439,16 +501,27 @@ export const LanguageProvider = ({ children }) => {
         let value = translations[language];
         
         for (const k of keys) {
-            value = value?.[k];
+            if (value && typeof value === 'object' && k in value) {
+                value = value[k];
+            } else {
+                console.warn(`Missing translation key "${key}" for language "${language}"`);
+                return key;
+            }
         }
         
         // If the resolved value is an object, log error and return the key string
         if (typeof value === 'object' && value !== null) {
             console.error(`Translation key "${key}" resolved to an object instead of a string. Available keys:`, Object.keys(value));
-            return key; // Return the key as fallback
+            return key;
         }
         
-        return value || key;
+        // If value is undefined or null, log warning and return key
+        if (value === undefined || value === null) {
+            console.warn(`Translation key "${key}" resolved to undefined/null for language "${language}"`);
+            return key;
+        }
+        
+        return value;
     };
 
     return (

@@ -206,6 +206,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
             min="0"
             step="0.01"
             disabled={isViewMode}
+            placeholder={t('orders.deliveryFee')}
           />
         </div>
 
@@ -361,6 +362,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                   );
                   return (
                     <div key={employee.employeeId} className="breakdown-item">
+                      <small className="form-help">{t('orders.deliveryFeePerPerson')}</small>
                       <span className="employee-name">{employee.employeeId}:</span>
                       <span className="breakdown-details">
                         {t('common.food')}: ${food.toFixed(2)} + {t('orders.delivery')}: ${Number(employee.deliveryTax || 0).toFixed(2)} =
