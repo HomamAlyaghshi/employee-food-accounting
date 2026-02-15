@@ -28,7 +28,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
     const handleExport = () => {
         const success = exportToFile(foodItems, `food_items_${new Date().toISOString().split('T')[0]}.json`);
         if (success) {
-            alert(t('dataExportedSuccessfully'));
+            alert(t('storage.dataExportedSuccessfully'));
         }
     };
 
@@ -42,14 +42,14 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
             const success = onImportData(data);
             
             if (success) {
-                alert(t('dataImportedSuccessfully'));
+                alert(t('storage.dataImportedSuccessfully'));
                 loadStorageInfo();
                 loadBackups();
             } else {
-                alert(t('invalidDataFormat'));
+                alert(t('storage.invalidDataFormat'));
             }
         } catch (error) {
-            alert(t('failedToImportFile') + error.message);
+            alert(t('storage.failedToImportFile') + error.message);
         } finally {
             setIsImporting(false);
             event.target.value = ''; // Reset file input
@@ -59,32 +59,32 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
     const handleCreateBackup = () => {
         const backupData = backup.create(foodItems, `Manual_${new Date().toISOString().split('T')[0]}`);
         if (backupData) {
-            alert(t('backupCreatedSuccessfully'));
+            alert(t('storage.backupCreatedSuccessfully'));
             loadBackups();
             loadStorageInfo();
         }
     };
 
     const handleRestoreBackup = (backupId) => {
-        if (window.confirm(t('areYouSureRestoreBackup'))) {
+        if (window.confirm(t('storage.areYouSureRestoreBackup'))) {
             const data = backup.restore(backupId);
             if (data) {
                 const success = onImportData(data);
                 if (success) {
-                    alert(t('backupRestoredSuccessfully'));
+                    alert(t('storage.backupRestoredSuccessfully'));
                     loadStorageInfo();
                 }
             } else {
-                alert(t('failedToRestoreBackup'));
+                alert(t('storage.failedToRestoreBackup'));
             }
         }
     };
 
     const handleDeleteBackup = (backupId) => {
-        if (window.confirm(t('areYouSureDeleteBackup'))) {
+        if (window.confirm(t('storage.areYouSureDeleteBackup'))) {
             const success = backup.delete(backupId);
             if (success) {
-                alert(t('backupDeletedSuccessfully'));
+                alert(t('storage.backupDeletedSuccessfully'));
                 loadBackups();
                 loadStorageInfo();
             }
@@ -92,7 +92,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
     };
 
     const handleClearAll = () => {
-        if (window.confirm(t('areYouSureClearAllData'))) {
+        if (window.confirm(t('storage.areYouSureClearAllData'))) {
             onClearData();
             loadStorageInfo();
             loadBackups();
@@ -108,31 +108,31 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
             <div className="storage-header">
                 <h3>
                     <Database size={20} />
-                    {t('dataStorageManagement')}
+                    {t('storage.dataStorageManagement')}
                 </h3>
                 <button 
                     className="btn btn-secondary"
                     onClick={() => setShowInfo(!showInfo)}
                 >
                     <Info size={16} />
-                    {showInfo ? t('hide') : t('show')} {t('info')}
+                    {showInfo ? t('common.hide') : t('common.show')} {t('common.info')}
                 </button>
             </div>
 
             {showInfo && storageInfo && (
                 <div className="storage-info">
                     <div className="info-card">
-                        <h4>{t('storageUsage')}</h4>
-                        <p>{t('totalSize')}: {storageInfo.totalSizeFormatted}</p>
-                        <p>{t('foodItems')}: {foodItems.length}</p>
-                        <p>{t('backups')}: {backups.length}</p>
+                        <h4>{t('storage.storageUsage')}</h4>
+                        <p>{t('storage.totalSize')}: {storageInfo.totalSizeFormatted}</p>
+                        <p>{t('storage.storageFoodItems')}: {foodItems.length}</p>
+                        <p>{t('storage.backups')}: {backups.length}</p>
                     </div>
                 </div>
             )}
 
             <div className="storage-actions">
                 <div className="action-group">
-                    <h4>{t('exportImport')}</h4>
+                    <h4>{t('storage.exportImport')}</h4>
                     <div className="action-buttons">
                         <button 
                             className="btn btn-primary"
@@ -140,11 +140,11 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                             disabled={foodItems.length === 0}
                         >
                             <Download size={16} />
-                            {t('exportData')}
+                            {t('storage.storageExportData')}
                         </button>
                         <label className="btn btn-secondary">
                             <Upload size={16} />
-                            {isImporting ? t('importing') : t('importData')}
+                            {isImporting ? t('common.importing') : t('storage.storageImportData')}
                             <input
                                 type="file"
                                 accept=".json"
@@ -157,7 +157,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                 </div>
 
                 <div className="action-group">
-                    <h4>{t('backupManagement')}</h4>
+                    <h4>{t('storage.backupManagement')}</h4>
                     <div className="action-buttons">
                         <button 
                             className="btn btn-secondary"
@@ -165,7 +165,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                             disabled={foodItems.length === 0}
                         >
                             <RefreshCw size={16} />
-                            {t('createBackup')}
+                            {t('storage.createBackup')}
                         </button>
                         <button 
                             className="btn btn-danger"
@@ -173,7 +173,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                             disabled={foodItems.length === 0}
                         >
                             <Trash2 size={16} />
-                            {t('clearAllData')}
+                            {t('storage.clearAllData')}
                         </button>
                     </div>
                 </div>
@@ -181,27 +181,27 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
 
             {backups.length > 0 && (
                 <div className="backups-list">
-                    <h4>{t('availableBackups')}</h4>
+                    <h4>{t('storage.availableBackups')}</h4>
                     <div className="backups-grid">
                         {backups.map(backup => (
                             <div key={backup.id} className="backup-card">
                                 <div className="backup-info">
                                     <h5>{backup.name}</h5>
                                     <p>{formatDate(backup.timestamp)}</p>
-                                    <p>{t('items')}: {backup.data?.length || 0}</p>
+                                    <p>{t('common.items')}: {backup.data?.length || 0}</p>
                                 </div>
                                 <div className="backup-actions">
                                     <button 
                                         className="btn btn-secondary btn-sm"
                                         onClick={() => handleRestoreBackup(backup.id)}
                                     >
-                                        {t('restore')}
+                                        {t('common.restore')}
                                     </button>
                                     <button 
                                         className="btn btn-danger btn-sm"
                                         onClick={() => handleDeleteBackup(backup.id)}
                                     >
-                                        {t('delete')}
+                                        {t('common.delete')}
                                     </button>
                                 </div>
                             </div>

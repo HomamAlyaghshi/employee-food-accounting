@@ -14,9 +14,9 @@ const ModernHeader = ({
     const { t, language, toggleLanguage } = useLanguage();
 
     const navItems = [
-        { id: 'employees', icon: Users, label: t('employeesNav') },
-        { id: 'home', icon: Home, label: t('foodItems') },
-        { id: 'analytics', icon: BarChart3, label: t('analytics') },
+        { id: 'employees', icon: Users, label: t('navigation.employeesNav') },
+        { id: 'home', icon: Home, label: t('common.foodItems') },
+        { id: 'analytics', icon: BarChart3, label: t('navigation.analytics') },
     ];
 
     return (
@@ -25,8 +25,8 @@ const ModernHeader = ({
                 <div className="header-title">
                     <img src="/logo.png" alt="يلا فطور - Yalla Breakfast" className="header-logo" />
                     <div className="header-text">
-                        <h1>{t('title')}</h1>
-                        <p>{t('subtitle')}</p>
+                        <h1>{t('common.title')}</h1>
+                        <p>{t('common.subtitle')}</p>
                     </div>
                 </div>
                 
@@ -51,7 +51,7 @@ const ModernHeader = ({
                                 onClick={onBulkDelete}
                             >
                                 <Trash2 size={18} />
-                                <span>{t('bulkDelete')} ({selectedItems.length})</span>
+                                <span>{t('orders.bulkDelete')} ({selectedItems.length})</span>
                             </button>
                         </div>
                     )}
@@ -70,7 +70,7 @@ const ModernHeader = ({
                             onClick={toggleTheme}
                         >
                             {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-                            <span>{isDarkMode ? t('lightMode') : t('darkMode')}</span>
+                            <span>{isDarkMode ? t('navigation.lightMode') : t('navigation.darkMode')}</span>
                         </button>
                     </div>
                 </div>

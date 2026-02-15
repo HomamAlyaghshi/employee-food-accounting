@@ -32,7 +32,7 @@ const AppContent = () => {
     const [showOrderForm, setShowOrderForm] = useState(false);
     const [isViewMode, setIsViewMode] = useState(false);
 
-    const { orders, createOrder, updateOrder, deleteOrder, clearAllOrders, getAllFoodItems } = useOrders();
+    const { orders, createOrder, updateOrder, deleteOrder, getAllFoodItems } = useOrders();
     const { errorMessage, showError } = useError();
     const { isModalOpen, modalData, openModal, closeModal } = useModal();
 
@@ -58,7 +58,7 @@ const AppContent = () => {
             }
             setShowOrderForm(false);
         } catch (error) {
-            showError(t('failedToSaveOrder') + error.message);
+            showError(t('app.failedToSaveOrder') + error.message);
         }
     };
 
@@ -70,7 +70,7 @@ const AppContent = () => {
     const handleDeleteOrder = (orderId) => {
         openModal({
             type: 'deleteOrder',
-            orderName: orders.find(o => o.id === orderId)?.name || t('unknown'),
+            orderName: orders.find(o => o.id === orderId)?.name || t('app.unknown'),
             onConfirm: () => {
                 deleteOrder(orderId);
             }
