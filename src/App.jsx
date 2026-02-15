@@ -14,6 +14,7 @@ import EmployeeTotals from './components/EmployeeTotals';
 import DetailedStats from './components/DetailedStats';
 import AnalyticsPage from './components/AnalyticsPage';
 import { DeleteModal } from './components/Modal';
+import EmployeeManager from './components/EmployeeManager';
 
 import { useOrders } from './hooks/useOrders';
 import { useError } from './hooks/useError';
@@ -23,18 +24,29 @@ import { calculateTotals, getEmployeeStats } from './utils/calculations';
 import { exportToCSV } from './utils/export';
 
 const App = () => {
-    const [currentPage, setCurrentPage] = useState('home');
+    const [currentPage, setCurrentPage] = useState('employees');
     const [showStats, setShowStats] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [editingOrder, setEditingOrder] = useState(null);
     const [showOrderForm, setShowOrderForm] = useState(false);
     const [isViewMode, setIsViewMode] = useState(false);
+    const [employees, setEmployees] = useState([]);
 
     const { orders, createOrder, updateOrder, deleteOrder, clearAllOrders, getAllFoodItems } = useOrders();
     const { errorMessage, showError } = useError();
     const { isModalOpen, modalData, openModal, closeModal } = useModal();
 
     const allFoodItems = getAllFoodItems();
+
+    const handleEmployeesUpdated = (updatedEmployees) => {
+        setEmployees(updatedEmployees);
+        // Update localStorage for OrderForm to use
+        localStorage.setItem('customEmployees', JSON.stringify(updatedEmployees));
+    };
+
+    const handleProceedToOrders = () => {
+        setCurrentPage('home');
+    };
 
     const handleCreateOrder = (orderData) => {
         try {
@@ -137,7 +149,12 @@ const App = () => {
                     <ErrorMessage message={errorMessage} />
                     
                     <main>
-                        {currentPage === 'home' ? (
+                        {currentPage === 'employees' ? (
+                            <EmployeeManager
+                                onEmployeesUpdated={handleEmployeesUpdated}
+                                onProceedToOrders={handleProceedToOrders}
+                            />
+                        ) : currentPage === 'home' ? (
                             <>
                                 {showOrderForm ? (
                                     <OrderForm

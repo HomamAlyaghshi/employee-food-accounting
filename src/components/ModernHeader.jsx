@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moon, Sun, Globe, Trash2, BarChart3, Home } from 'lucide-react';
+import { Moon, Sun, Globe, Trash2, BarChart3, Home, Users } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -14,6 +14,7 @@ const ModernHeader = ({
     const { t, language, toggleLanguage } = useLanguage();
 
     const navItems = [
+        { id: 'employees', icon: Users, label: 'Employees' },
         { id: 'home', icon: Home, label: t('foodItems') },
         { id: 'analytics', icon: BarChart3, label: t('analytics') },
     ];

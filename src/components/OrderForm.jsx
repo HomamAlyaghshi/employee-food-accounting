@@ -10,11 +10,21 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
   const [deliveryFee, setDeliveryFee] = useState(currentOrder?.deliveryFee || 0);
   const [employees, setEmployees] = useState(currentOrder?.employees || []);
   const [selectedEmployeeIndex, setSelectedEmployeeIndex] = useState(-1);
+  const [customEmployees, setCustomEmployees] = useState([]);
+  const [newEmployeeName, setNewEmployeeName] = useState("");
+  const [showAddEmployee, setShowAddEmployee] = useState(false);
 
   const currentEmployee =
     selectedEmployeeIndex >= 0 ? employees[selectedEmployeeIndex] : null;
 
   useEffect(() => {
+    // Load custom employees from localStorage
+    const savedEmployees = localStorage.getItem('customEmployees');
+    if (savedEmployees) {
+      const employeesData = JSON.parse(savedEmployees);
+      setCustomEmployees(employeesData.map(emp => emp.name));
+    }
+    
     if (employees.length === 0 && !currentOrder) {
       setEmployees([
         {
@@ -34,6 +44,22 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
     const newEmployee = { employeeId: "", products: [], deliveryTax: 0 };
     setEmployees((prev) => [...prev, newEmployee]);
     setSelectedEmployeeIndex(employees.length);
+  };
+
+  const addCustomEmployee = () => {
+    if (newEmployeeName.trim() && !customEmployees.includes(newEmployeeName.trim())) {
+      setCustomEmployees(prev => [...prev, newEmployeeName.trim()]);
+      setNewEmployeeName("");
+      setShowAddEmployee(false);
+    }
+  };
+
+  const removeCustomEmployee = (employeeName) => {
+    setCustomEmployees(prev => prev.filter(emp => emp !== employeeName));
+  };
+
+  const getAllEmployees = () => {
+    return [...customEmployees, ...EMPLOYEES];
   };
 
   const selectEmployee = (index) => {
@@ -208,13 +234,78 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
         <div className="employees-section">
           <div className="section-header">
             <h3>Employees & Products</h3>
-            {!isViewMode && (
-              <button type="button" className="btn btn-secondary btn-sm" onClick={addNewEmployee}>
-                <Plus size={14} />
-                Add Employee
-              </button>
-            )}
+            <div className="section-header-actions">
+              {!isViewMode && (
+                <button 
+                  type="button" 
+                  className="btn btn-secondary btn-sm" 
+                  onClick={() => setShowAddEmployee(true)}
+                >
+                  <Plus size={14} />
+                  Add Employee Name
+                </button>
+              )}
+              {!isViewMode && (
+                <button type="button" className="btn btn-secondary btn-sm" onClick={addNewEmployee}>
+                  <Plus size={14} />
+                  Add Employee to Order
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* Custom Employees Management */}
+          {showAddEmployee && (
+            <div className="custom-employee-input">
+              <input
+                type="text"
+                value={newEmployeeName}
+                onChange={(e) => setNewEmployeeName(e.target.value)}
+                placeholder="Enter employee name"
+                className="form-control"
+                onKeyPress={(e) => e.key === 'Enter' && addCustomEmployee()}
+              />
+              <button 
+                type="button" 
+                className="btn btn-primary btn-sm"
+                onClick={addCustomEmployee}
+              >
+                Add
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-ghost btn-sm"
+                onClick={() => {
+                  setShowAddEmployee(false);
+                  setNewEmployeeName("");
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
+          {/* Custom Employees List */}
+          {customEmployees.length > 0 && (
+            <div className="custom-employee-list">
+              <h4>Custom Employees:</h4>
+              <div className="employee-tags">
+                {customEmployees.map((emp, index) => (
+                  <span key={index} className="employee-tag">
+                    {emp}
+                    {!isViewMode && (
+                      <button
+                        type="button"
+                        onClick={() => removeCustomEmployee(emp)}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {employees.map((employee, empIndex) => (
             <div key={empIndex} className="employee-card">
@@ -229,7 +320,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                     required
                   >
                     <option value="">Select Employee</option>
-                    {EMPLOYEES.map((emp) => (
+                    {getAllEmployees().map((emp) => (
                       <option key={emp} value={emp}>
                         {emp}
                       </option>

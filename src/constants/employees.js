@@ -1,14 +1,2 @@
-export const EMPLOYEES = [
-    'همام اليغشي',
-    'زياد المدور',
-    'جودي الايوبي',
-    'براء الناصيف',
-    'عقبة جاموس',
-    'حسام الاحمد',
-    'بيان السد اللحام',
-    'رزان الخن',
-    'امينة اللحام',
-    'سدرة اليغشي',
-    'مها رباح',
-    'عدنان الحوري'
-];
+// Dynamic employees - users can add their own employee names
+export const EMPLOYEES = [];
