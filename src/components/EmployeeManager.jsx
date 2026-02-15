@@ -42,7 +42,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
       return;
     }
     
-    if (employees.some(emp => emp.toLowerCase() === trimmedName.toLowerCase())) {
+    if (employees.some(emp => emp.name.toLowerCase() === trimmedName.toLowerCase())) {
       showNotification('error', t('employees.employeeAlreadyExists'));
       return;
     }
