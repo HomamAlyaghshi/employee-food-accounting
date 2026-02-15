@@ -55,8 +55,8 @@ const AnalyticsPage = ({ foodItems }) => {
         return (
             <div className="analytics-page">
                 <div className="no-data-message">
-                    <h2>{t('analytics')}</h2>
-                    <p>{t('noData')}</p>
+                    <h2>{t('navigation.analytics')}</h2>
+                    <p>{t('common.noData')}</p>
                 </div>
             </div>
         );
@@ -68,15 +68,15 @@ const AnalyticsPage = ({ foodItems }) => {
                 <h2>{t('analytics')}</h2>
                 <div className="analytics-summary">
                     <div className="summary-card">
-                        <h3>{t('totalItems')}</h3>
+                        <h3>{t('common.totalItems')}</h3>
                         <p>{foodItems.length}</p>
                     </div>
                     <div className="summary-card">
-                        <h3>{t('grandTotal')}</h3>
+                        <h3>{t('employees.grandTotal')}</h3>
                         <p>${grandTotal.toFixed(2)}</p>
                     </div>
                     <div className="summary-card">
-                        <h3>{t('employees')}</h3>
+                        <h3>{t('common.employees')}</h3>
                         <p>{Object.keys(employeeTotalsMap).length}</p>
                     </div>
                 </div>
@@ -85,7 +85,7 @@ const AnalyticsPage = ({ foodItems }) => {
             <div className="charts-grid">
                 {/* Employee Costs Bar Chart */}
                 <div className="chart-container">
-                    <h3>{t('employeeCosts')}</h3>
+                    <h3>{t('analytics.employeeCostAnalysis')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={employeeTotalsData}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -93,14 +93,14 @@ const AnalyticsPage = ({ foodItems }) => {
                             <YAxis />
                             <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
                             <Legend />
-                            <Bar dataKey="total" fill="#667eea" name={t('totalCost')} />
+                            <Bar dataKey="total" fill="#667eea" name={t('analytics.totalCost')} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
 
                 {/* Cost Distribution Pie Chart */}
                 <div className="chart-container">
-                    <h3>{t('costDistribution')}</h3>
+                    <h3>{t('analytics.itemPriceComparison')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
                             <Pie
@@ -124,7 +124,7 @@ const AnalyticsPage = ({ foodItems }) => {
 
                 {/* Orders and Items Comparison */}
                 <div className="chart-container">
-                    <h3>{t('ordersItemsComparison')}</h3>
+                    <h3>{t('analytics.orderFrequency')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={orderCountData}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -132,15 +132,15 @@ const AnalyticsPage = ({ foodItems }) => {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="orders" fill="#764ba2" name={t('numberOfOrders')} />
-                            <Bar dataKey="items" fill="#f59e0b" name={t('totalItems')} />
+                            <Bar dataKey="orders" fill="#764ba2" name={t('analytics.numberOfOrders')} />
+                            <Bar dataKey="items" fill="#f59e0b" name={t('common.totalItems')} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
 
                 {/* Average Values */}
                 <div className="chart-container">
-                    <h3>{t('averageValuesComparison')}</h3>
+                    <h3>{t('analytics.averageOrderValue')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <LineChart data={avgOrderData}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -153,14 +153,14 @@ const AnalyticsPage = ({ foodItems }) => {
                                 dataKey="avgOrder" 
                                 stroke="#10b981" 
                                 strokeWidth={2}
-                                name={t('avgOrderValue')}
+                                name={t('analytics.avgOrderValue')}
                             />
                             <Line 
                                 type="monotone" 
                                 dataKey="avgItem" 
                                 stroke="#ef4444" 
                                 strokeWidth={2}
-                                name={t('avgItemPrice')}
+                                name={t('analytics.avgItemPrice')}
                             />
                         </LineChart>
                     </ResponsiveContainer>
@@ -168,7 +168,7 @@ const AnalyticsPage = ({ foodItems }) => {
 
                 {/* Cumulative Cost Area Chart */}
                 <div className="chart-container full-width">
-                    <h3>{t('cumulativeCostTrend')}</h3>
+                    <h3>{t('analytics.monthlyTrends')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <AreaChart data={employeeTotalsData.sort((a, b) => b.total - a.total)}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -181,7 +181,7 @@ const AnalyticsPage = ({ foodItems }) => {
                                 stroke="#8b5cf6" 
                                 fill="#8b5cf6" 
                                 fillOpacity={0.6}
-                                name={t('cost')}
+                                name={t('analytics.totalCost')}
                             />
                         </AreaChart>
                     </ResponsiveContainer>
@@ -190,17 +190,17 @@ const AnalyticsPage = ({ foodItems }) => {
 
             {/* Detailed Statistics Table */}
             <div className="detailed-stats-table">
-                <h3>{t('detailedEmployeeStatistics')}</h3>
+                <h3>{t('employees.detailedEmployeeStatistics')}</h3>
                 <div className="stats-table-container">
                     <table className="stats-table">
                         <thead>
                             <tr>
-                                <th>{t('employee')}</th>
-                                <th>{t('totalAmount')}</th>
-                                <th>{t('totalItems')}</th>
-                                <th>{t('ordersCount')}</th>
-                                <th>{t('avgOrder')}</th>
-                                <th>{t('avgItem')}</th>
+                                <th>{t('common.employee')}</th>
+                                <th>{t('orders.totalAmount')}</th>
+                                <th>{t('common.totalItems')}</th>
+                                <th>{t('analytics.ordersCount')}</th>
+                                <th>{t('analytics.avgOrder')}</th>
+                                <th>{t('analytics.avgItem')}</th>
                             </tr>
                         </thead>
                         <tbody>
