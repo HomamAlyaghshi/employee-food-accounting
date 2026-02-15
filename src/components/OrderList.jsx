@@ -50,16 +50,16 @@ const OrderList = ({
     return (
         <div className="card order-list">
             <div className="order-list-header">
-                <h2>{t('orders')}</h2>
+                <h2>{t('navigation.orders')}</h2>
                 <button className="btn btn-primary" onClick={onCreateNewOrder}>
                     <Plus size={16} />
-                    {t('newOrder')}
+                    {t('navigation.newOrder')}
                 </button>
             </div>
 
             {orders.length === 0 ? (
                 <div className="empty-state">
-                    <p>{t('noOrdersYet')}</p>
+                    <p>{t('orders.noOrdersYet')}</p>
                 </div>
             ) : (
                 <div className="orders-container">

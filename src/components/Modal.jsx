@@ -73,12 +73,12 @@ export const DeleteModal = ({
     const { t } = useLanguage();
     
     const title = itemCount > 1 
-        ? `${t('delete')} ${itemCount} ${itemType}` 
-        : `${t('delete')} ${itemType}`;
+        ? `${t('common.delete')} ${itemCount} ${itemType}` 
+        : `${t('common.delete')} ${itemType}`;
         
     const message = itemCount > 1
-        ? t('areYouSureDeleteMultiple').replace('{count}', itemCount)
-        : t('areYouSureDelete');
+        ? t('modal.areYouSureDeleteMultiple').replace('{count}', itemCount)
+        : t('modal.areYouSureDelete');
 
     return (
         <Modal

@@ -65,7 +65,7 @@ const AnalyticsPage = ({ foodItems }) => {
     return (
         <div className="analytics-page">
             <div className="analytics-header">
-                <h2>{t('analytics')}</h2>
+                <h2>{t('navigation.analytics')}</h2>
                 <div className="analytics-summary">
                     <div className="summary-card">
                         <h3>{t('common.totalItems')}</h3>

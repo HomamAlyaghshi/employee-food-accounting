@@ -438,6 +438,12 @@ export const LanguageProvider = ({ children }) => {
             value = value?.[k];
         }
         
+        // If the resolved value is an object, log error and return the key string
+        if (typeof value === 'object' && value !== null) {
+            console.error(`Translation key "${key}" resolved to an object instead of a string. Available keys:`, Object.keys(value));
+            return key; // Return the key as fallback
+        }
+        
         return value || key;
     };
 

@@ -12,22 +12,22 @@ const FoodTable = ({
 
   return (
     <div className="card">
-      <h2>{t('foodItems')}</h2>
+      <h2>{t('common.foodItems')}</h2>
       <div className="table-controls">
         <div className="controls-left">
           <span className="items-count">
-            {t('totalItems')}: {foodItems.length}
+            {t('common.totalItems')}: {foodItems.length}
           </span>
           <span className="selected-count">
-            {t('selectedItems')}: {selectedItems.length}
+            {t('table.selectedItems')}: {selectedItems.length}
           </span>
         </div>
         <div className="controls-right">
           <button className="btn btn-secondary btn-sm">
-            {t('selectAll')}
+            {t('common.selectAll')}
           </button>
           <button className="btn btn-secondary btn-sm">
-            {t('clearSelection')}
+            {t('common.clearSelection')}
           </button>
         </div>
       </div>
@@ -36,14 +36,14 @@ const FoodTable = ({
           <thead>
             <tr>
               <th style={{ width: "50px" }}></th>
-              <th>{t('employeeName')}</th>
-              <th>{t('foodItem')}</th>
-              <th>{t('quantity')}</th>
-              <th>{t('price')}</th>
-              <th>{t('total')}</th>
-              <th>{t('delivery')}</th>
+              <th>{t('common.employeeName')}</th>
+              <th>{t('common.foodItem')}</th>
+              <th>{t('common.quantity')}</th>
+              <th>{t('common.price')}</th>
+              <th>{t('common.total')}</th>
+              <th>{t('orders.delivery')}</th>
               <th>{t('finalTotal')}</th>
-              <th>{t('actions')}</th>
+              <th>{t('common.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -61,7 +61,7 @@ const FoodTable = ({
                         className="item-checkbox"
                         checked={isItemSelected(row.id)}
                         onChange={() => onToggleSelection(row.id)}
-                        aria-label={t('selectRow')}
+                        aria-label={t('table.selectRow')}
                       />
                     </div>
                   </td>
@@ -82,7 +82,7 @@ const FoodTable = ({
                   <td className="delivery-fee">${Number(delivery).toFixed(2)}</td>
                   <td className="final-total">${Number(finalTotal).toFixed(2)}</td>
                   <td className="actions">
-                    <button className="btn btn-icon btn-sm" title={t('viewDetails')}>
+                    <button className="btn btn-icon btn-sm" title={t('orders.viewDetails')}>
                       👁
                     </button>
                   </td>
@@ -96,9 +96,9 @@ const FoodTable = ({
         <div className="empty-state">
           <div className="empty-icon">🍽️</div>
           <h3>{t('noData')}</h3>
-          <p>{t('noFoodItemsMessage')}</p>
+          <p>{t('table.noFoodItemsMessage')}</p>
           <button className="btn btn-primary">
-            {t('addFirstItem')}
+            {t('table.addFirstItem')}
           </button>
         </div>
       )}

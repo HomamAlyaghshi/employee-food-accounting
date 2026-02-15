@@ -5,35 +5,35 @@ const EmployeeTotals = ({ employeeTotalsMap, grandTotal, employeeDeliveryFees, o
     const { t } = useLanguage();
     return (
         <div className="card">
-            <h2>{t('employeeStatistics')}</h2>
+            <h2>{t('employees.employeeStatistics')}</h2>
             <div className="stats-controls">
                 <button className="btn btn-secondary" onClick={onToggleStats}>
-                    {showStats ? t('hideDetailedStats') : t('showDetailedStats')}
+                    {showStats ? t('employees.hideDetailedStats') : t('employees.showDetailedStats')}
                 </button>
-                <button className="btn btn-secondary" onClick={onExportData}>{t('exportData')}</button>
+                <button className="btn btn-secondary" onClick={onExportData}>{t('common.exportData')}</button>
             </div>
             <div className="employee-totals">
                 {Object.entries(employeeTotalsMap).length === 0 ? (
-                    <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{t('noEmployeeTotals')}</p>
+                    <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{t('employees.noEmployeeTotals')}</p>
                 ) : (
                     Object.entries(employeeTotalsMap).map(([employeeName, total]) => (
                         <div key={employeeName} className="employee-total-card">
                             <div className="employee-name">{employeeName}</div>
                             <div className="employee-breakdown">
                                 <div className="food-total">
-                                    <span className="label">{t('food')}:</span>
+                                    <span className="label">{t('common.food')}:</span>
                                     <span className="amount">
                                         ${(total - (employeeDeliveryFees?.[employeeName] || 0)).toFixed(2)}
                                     </span>
                                 </div>
                                 <div className="delivery-fee">
-                                    <span className="label">{t('delivery')}:</span>
+                                    <span className="label">{t('orders.delivery')}:</span>
                                     <span className="amount">
                                         ${(employeeDeliveryFees?.[employeeName] || 0).toFixed(2)}
                                     </span>
                                 </div>
                                 <div className="total-amount">
-                                    <strong>{t('total')}: ${total.toFixed(2)}</strong>
+                                    <strong>{t('common.total')}: ${total.toFixed(2)}</strong>
                                 </div>
                             </div>
                         </div>
@@ -41,7 +41,7 @@ const EmployeeTotals = ({ employeeTotalsMap, grandTotal, employeeDeliveryFees, o
                 )}
             </div>
             <div className="grand-total">
-                <strong>{t('grandTotal')}: ${grandTotal.toFixed(2)}</strong>
+                <strong>{t('employees.grandTotal')}: ${grandTotal.toFixed(2)}</strong>
             </div>
         </div>
     );
