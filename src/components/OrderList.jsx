@@ -50,16 +50,16 @@ const OrderList = ({
     return (
         <div className="card order-list">
             <div className="order-list-header">
-                <h2>Orders</h2>
+                <h2>{t('orders')}</h2>
                 <button className="btn btn-primary" onClick={onCreateNewOrder}>
                     <Plus size={16} />
-                    New Order
+                    {t('newOrder')}
                 </button>
             </div>
 
             {orders.length === 0 ? (
                 <div className="empty-state">
-                    <p>No orders yet. Create your first order!</p>
+                    <p>{t('noOrdersYet')}</p>
                 </div>
             ) : (
                 <div className="orders-container">
@@ -83,21 +83,21 @@ const OrderList = ({
                                         <button 
                                             className="btn btn-outline btn-sm"
                                             onClick={() => onViewOrder(order)}
-                                            title="View Details"
+                                            title={t('viewDetails')}
                                         >
                                             <Eye size={14} />
                                         </button>
                                         <button 
                                             className="btn btn-secondary btn-sm"
                                             onClick={() => onEditOrder(order)}
-                                            title="Edit Order"
+                                            title={t('editOrderTooltip')}
                                         >
                                             <Edit3 size={14} />
                                         </button>
                                         <button 
                                             className="btn btn-danger btn-sm"
                                             onClick={() => onDeleteOrder(order.id)}
-                                            title="Delete Order"
+                                            title={t('deleteOrderTooltip')}
                                         >
                                             <Trash2 size={14} />
                                         </button>
@@ -108,11 +108,11 @@ const OrderList = ({
                                     <div className="order-details">
                                         <div className="items-grid">
                                             <div className="grid-header">
-                                                <div>Employee</div>
-                                                <div>Product</div>
-                                                <div>Quantity</div>
-                                                <div>Price</div>
-                                                <div>Total</div>
+                                                <div>{t('employee')}</div>
+                                                <div>{t('product')}</div>
+                                                <div>{t('quantity')}</div>
+                                                <div>{t('price')}</div>
+                                                <div>{t('total')}</div>
                                             </div>
                                             
                                             {order.employees?.filter(emp => emp.employeeId).map(employee => (
@@ -129,7 +129,7 @@ const OrderList = ({
                                         </div>
                                         
                                         <div className="employee-breakdown">
-                                            <h4>Employee Breakdown</h4>
+                                            <h4>{t('employeeBreakdown')}</h4>
                                             {totals.uniqueEmployees.map(employeeName => {
                                                 const employee = order.employees?.find(emp => emp.employeeId === employeeName);
                                                 const foodTotal = employee?.products?.reduce((sum, product) => sum + (product.totalPrice || 0), 0) || 0;
@@ -138,8 +138,8 @@ const OrderList = ({
                                                     <div key={employeeName} className="breakdown-item">
                                                         <span className="employee-name">{employeeName}:</span>
                                                         <span className="breakdown-details">
-                                                            Food: ${foodTotal.toFixed(2)} + 
-                                                            Delivery: ${totals.deliveryFeePerEmployee.toFixed(2)} = 
+                                                            {t('food')}: ${foodTotal.toFixed(2)} + 
+                                                            {t('delivery')}: ${totals.deliveryFeePerEmployee.toFixed(2)} = 
                                                             <strong>${(foodTotal + totals.deliveryFeePerEmployee).toFixed(2)}</strong>
                                                         </span>
                                                     </div>

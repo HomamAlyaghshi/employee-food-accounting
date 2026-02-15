@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, AlertTriangle, Trash2 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Modal = ({ 
     isOpen, 
@@ -7,11 +8,12 @@ const Modal = ({
     onConfirm, 
     title, 
     message, 
-    confirmText = 'Delete', 
-    cancelText = 'Cancel',
+    confirmText = 'delete', 
+    cancelText = 'cancel',
     type = 'danger',
     icon: Icon = AlertTriangle
 }) => {
+    const { t } = useLanguage();
     if (!isOpen) return null;
 
     const handleBackdropClick = (e) => {
@@ -47,13 +49,13 @@ const Modal = ({
                         className="btn btn-secondary modal-btn-cancel"
                         onClick={onClose}
                     >
-                        {cancelText}
+                        {t(cancelText)}
                     </button>
                     <button 
                         className={`btn modal-btn-confirm modal-btn-${type}`}
                         onClick={handleConfirm}
                     >
-                        {confirmText}
+                        {t(confirmText)}
                     </button>
                 </div>
             </div>
@@ -68,13 +70,15 @@ export const DeleteModal = ({
     itemCount, 
     itemType = 'items' 
 }) => {
+    const { t } = useLanguage();
+    
     const title = itemCount > 1 
-        ? `Delete ${itemCount} ${itemType}` 
-        : `Delete ${itemType}`;
+        ? `${t('delete')} ${itemCount} ${itemType}` 
+        : `${t('delete')} ${itemType}`;
         
     const message = itemCount > 1
-        ? `Are you sure you want to delete ${itemCount} ${itemType}? This action cannot be undone.`
-        : `Are you sure you want to delete this ${itemType.slice(0, -1)}? This action cannot be undone.`;
+        ? t('areYouSureDeleteMultiple').replace('{count}', itemCount)
+        : t('areYouSureDelete');
 
     return (
         <Modal

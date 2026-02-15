@@ -1,37 +1,39 @@
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const EmployeeTotals = ({ employeeTotalsMap, grandTotal, employeeDeliveryFees, onExportData, onToggleStats, showStats }) => {
+    const { t } = useLanguage();
     return (
         <div className="card">
-            <h2>Employee Statistics</h2>
+            <h2>{t('employeeStatistics')}</h2>
             <div className="stats-controls">
                 <button className="btn btn-secondary" onClick={onToggleStats}>
-                    {showStats ? 'Hide Detailed Stats' : 'Show Detailed Stats'}
+                    {showStats ? t('hideDetailedStats') : t('showDetailedStats')}
                 </button>
-                <button className="btn btn-secondary" onClick={onExportData}>Export Data</button>
+                <button className="btn btn-secondary" onClick={onExportData}>{t('exportData')}</button>
             </div>
             <div className="employee-totals">
                 {Object.entries(employeeTotalsMap).length === 0 ? (
-                    <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No employee totals to display</p>
+                    <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{t('noEmployeeTotals')}</p>
                 ) : (
                     Object.entries(employeeTotalsMap).map(([employeeName, total]) => (
                         <div key={employeeName} className="employee-total-card">
                             <div className="employee-name">{employeeName}</div>
                             <div className="employee-breakdown">
                                 <div className="food-total">
-                                    <span className="label">Food:</span>
+                                    <span className="label">{t('food')}:</span>
                                     <span className="amount">
                                         ${(total - (employeeDeliveryFees?.[employeeName] || 0)).toFixed(2)}
                                     </span>
                                 </div>
                                 <div className="delivery-fee">
-                                    <span className="label">Delivery:</span>
+                                    <span className="label">{t('delivery')}:</span>
                                     <span className="amount">
                                         ${(employeeDeliveryFees?.[employeeName] || 0).toFixed(2)}
                                     </span>
                                 </div>
                                 <div className="total-amount">
-                                    <strong>Total: ${total.toFixed(2)}</strong>
+                                    <strong>{t('total')}: ${total.toFixed(2)}</strong>
                                 </div>
                             </div>
                         </div>
@@ -39,7 +41,7 @@ const EmployeeTotals = ({ employeeTotalsMap, grandTotal, employeeDeliveryFees, o
                 )}
             </div>
             <div className="grand-total">
-                <strong>Grand Total: ${grandTotal.toFixed(2)}</strong>
+                <strong>{t('grandTotal')}: ${grandTotal.toFixed(2)}</strong>
             </div>
         </div>
     );

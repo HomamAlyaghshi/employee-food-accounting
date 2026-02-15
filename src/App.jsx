@@ -3,7 +3,7 @@ import './App-modern.css';
 import './App-dark.css';
 
 import { ThemeProvider } from './contexts/ThemeContext';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 
 import ModernHeader from './components/ModernHeader';
 import ErrorMessage from './components/ErrorMessage';
@@ -23,7 +23,8 @@ import { useModal } from './hooks/useModal';
 import { calculateTotals, getEmployeeStats } from './utils/calculations';
 import { exportToCSV } from './utils/export';
 
-const App = () => {
+const AppContent = () => {
+    const { t } = useLanguage();
     const [currentPage, setCurrentPage] = useState('employees');
     const [showStats, setShowStats] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -58,7 +59,7 @@ const App = () => {
             }
             setShowOrderForm(false);
         } catch (error) {
-            showError('Failed to save order: ' + error.message);
+            showError(t('failedToSaveOrder') + error.message);
         }
     };
 
@@ -70,7 +71,7 @@ const App = () => {
     const handleDeleteOrder = (orderId) => {
         openModal({
             type: 'deleteOrder',
-            orderName: orders.find(o => o.id === orderId)?.name || 'Unknown',
+            orderName: orders.find(o => o.id === orderId)?.name || t('unknown'),
             onConfirm: () => {
                 deleteOrder(orderId);
             }
@@ -135,78 +136,84 @@ const App = () => {
     const employeeData = getEmployeeStats(allFoodItems);
 
     return (
+        <div className="container">
+            <ModernHeader
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+                selectedItems={selectedItems}
+                onBulkDelete={handleBulkDelete}
+                hasItems={orders.length > 0}
+            />
+            
+            <ErrorMessage message={errorMessage} />
+            
+            <main>
+                {currentPage === 'employees' ? (
+                    <EmployeeManager
+                        onEmployeesUpdated={handleEmployeesUpdated}
+                        onProceedToOrders={handleProceedToOrders}
+                    />
+                ) : currentPage === 'home' ? (
+                    <>
+                        {showOrderForm ? (
+                            <OrderForm
+                                onCreateOrder={handleCreateOrder}
+                                onReset={handleCancelOrderForm}
+                                currentOrder={editingOrder}
+                                isViewMode={isViewMode}
+                            />
+                        ) : (
+                            <OrderList
+                                orders={orders}
+                                onEditOrder={handleEditOrder}
+                                onDeleteOrder={handleDeleteOrder}
+                                onViewOrder={handleViewOrder}
+                                onCreateNewOrder={handleCreateNewOrder}
+                            />
+                        )}
+
+                        <FoodTable
+                            foodItems={allFoodItems}
+                            selectedItems={selectedItems}
+                            onToggleSelection={handleToggleSelection}
+                        />
+
+                        <EmployeeTotals
+                            employeeTotalsMap={employeeTotalsMap}
+                            grandTotal={grandTotal}
+                            employeeDeliveryFees={employeeDeliveryFees}
+                            onExportData={handleExportData}
+                            onToggleStats={() => setShowStats(!showStats)}
+                            showStats={showStats}
+                        />
+
+                        {showStats && (
+                            <DetailedStats employeeData={employeeData} />
+                        )}
+                    </>
+                ) : (
+                    <AnalyticsPage foodItems={allFoodItems} />
+                )}
+            </main>
+            
+           
+            
+            <DeleteModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                onConfirm={modalData.onConfirm}
+                itemCount={modalData.itemCount || 1}
+                itemType={modalData.type === 'bulk' ? 'items' : 'item'}
+            />
+        </div>
+    );
+};
+
+const App = () => {
+    return (
         <ThemeProvider>
             <LanguageProvider>
-                <div className="container">
-                    <ModernHeader
-                        currentPage={currentPage}
-                        onPageChange={setCurrentPage}
-                        selectedItems={selectedItems}
-                        onBulkDelete={handleBulkDelete}
-                        hasItems={orders.length > 0}
-                    />
-                    
-                    <ErrorMessage message={errorMessage} />
-                    
-                    <main>
-                        {currentPage === 'employees' ? (
-                            <EmployeeManager
-                                onEmployeesUpdated={handleEmployeesUpdated}
-                                onProceedToOrders={handleProceedToOrders}
-                            />
-                        ) : currentPage === 'home' ? (
-                            <>
-                                {showOrderForm ? (
-                                    <OrderForm
-                                        onCreateOrder={handleCreateOrder}
-                                        onReset={handleCancelOrderForm}
-                                        currentOrder={editingOrder}
-                                        isViewMode={isViewMode}
-                                    />
-                                ) : (
-                                    <OrderList
-                                        orders={orders}
-                                        onEditOrder={handleEditOrder}
-                                        onDeleteOrder={handleDeleteOrder}
-                                        onViewOrder={handleViewOrder}
-                                        onCreateNewOrder={handleCreateNewOrder}
-                                    />
-                                )}
-
-                                <FoodTable
-                                    foodItems={allFoodItems}
-                                    selectedItems={selectedItems}
-                                    onToggleSelection={handleToggleSelection}
-                                />
-
-                                <EmployeeTotals
-                                    employeeTotalsMap={employeeTotalsMap}
-                                    grandTotal={grandTotal}
-                                    employeeDeliveryFees={employeeDeliveryFees}
-                                    onExportData={handleExportData}
-                                    onToggleStats={() => setShowStats(!showStats)}
-                                    showStats={showStats}
-                                />
-
-                                {showStats && (
-                                    <DetailedStats employeeData={employeeData} />
-                                )}
-                            </>
-                        ) : (
-                            <AnalyticsPage foodItems={allFoodItems} />
-                        )}
-                    </main>
-                    
-                   
-                    
-                    <DeleteModal
-                        isOpen={isModalOpen}
-                        onClose={closeModal}
-                        onConfirm={modalData.onConfirm}
-                        itemCount={modalData.itemCount || 1}
-                        itemType={modalData.type === 'bulk' ? 'items' : 'item'}
-                    />
-                </div>
+                <AppContent />
             </LanguageProvider>
         </ThemeProvider>
     );

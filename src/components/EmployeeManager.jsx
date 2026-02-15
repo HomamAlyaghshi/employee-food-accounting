@@ -38,12 +38,12 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
     const trimmedName = newEmployeeName.trim();
     
     if (!trimmedName) {
-      showNotification('error', 'Please enter an employee name');
+      showNotification('error', t('pleaseEnterEmployeeName'));
       return;
     }
     
     if (employees.some(emp => emp.toLowerCase() === trimmedName.toLowerCase())) {
-      showNotification('error', 'This employee already exists');
+      showNotification('error', t('employeeAlreadyExists'));
       return;
     }
     
@@ -56,12 +56,12 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
     setEmployees([...employees, newEmployee]);
     setNewEmployeeName("");
     setShowAddForm(false);
-    showNotification('success', `Employee "${trimmedName}" added successfully`);
+    showNotification('success', t('employeeAddedSuccessfully').replace('{name}', trimmedName));
   };
 
   const removeEmployee = (id, name) => {
     setEmployees(employees.filter(emp => emp.id !== id));
-    showNotification('success', `Employee "${name}" removed`);
+    showNotification('success', t('employeeRemoved').replace('{name}', name));
   };
 
   const filteredEmployees = employees.filter(emp =>
@@ -70,7 +70,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
 
   const handleProceed = () => {
     if (employees.length === 0) {
-      showNotification('error', 'Please add at least one employee before proceeding');
+      showNotification('error', t('pleaseAddAtLeastOneEmployee'));
       return;
     }
     onEmployeesUpdated(employees);
@@ -85,14 +85,14 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
           <div className="header-title">
             <Users size={32} />
             <div>
-              <h1>Employee Management</h1>
-              <p>Add and manage your team members</p>
+              <h1>{t('employeeManagement')}</h1>
+              <p>{t('addAndManageTeam')}</p>
             </div>
           </div>
           <div className="header-stats">
             <div className="stat-card">
               <span className="stat-number">{employees.length}</span>
-              <span className="stat-label">Total Employees</span>
+              <span className="stat-label">{t('totalEmployees')}</span>
             </div>
           </div>
         </div>
@@ -104,14 +104,14 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
           <div className="hint-content">
             <AlertCircle size={20} />
             <div>
-              <h3>Welcome! Let's set up your team</h3>
-              <p>Start by adding your employees. You can add as many as you need, then proceed to create orders.</p>
+              <h3>{t('welcomeLetsSetupTeam')}</h3>
+              <p>{t('startByAddingEmployees')}</p>
             </div>
             <button 
               className="btn btn-ghost btn-sm"
               onClick={() => setShowHint(false)}
             >
-              Got it!
+              {t('gotIt')}
             </button>
           </div>
         </div>
@@ -133,7 +133,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
           <Search size={18} />
           <input
             type="text"
-            placeholder="Search employees..."
+            placeholder={t('searchEmployees')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -152,19 +152,19 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
       {showAddForm && (
         <div className="add-employee-form">
           <div className="form-content">
-            <h3>Add New Employee</h3>
+            <h3>{t('addNewEmployee')}</h3>
             <div className="input-group">
               <input
                 type="text"
                 value={newEmployeeName}
                 onChange={(e) => setNewEmployeeName(e.target.value)}
-                placeholder="Enter employee name"
+                placeholder={t('enterEmployeeName')}
                 className="form-control"
                 autoFocus
                 onKeyPress={(e) => e.key === 'Enter' && addEmployee()}
               />
               <div className="input-hint">
-                Press Enter to add quickly
+                {t('pressEnterToAdd')}
               </div>
             </div>
             <div className="form-actions">
@@ -173,7 +173,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
                 onClick={addEmployee}
               >
                 <Plus size={16} />
-                Add Employee
+                {t('addEmployee')}
               </button>
               <button 
                 className="btn btn-ghost"
@@ -182,7 +182,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
                   setNewEmployeeName("");
                 }}
               >
-                Cancel
+                {t('cancel')}
               </button>
             </div>
           </div>
@@ -194,9 +194,9 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
         {filteredEmployees.length === 0 ? (
           <div className="empty-state">
             <Users size={48} />
-            <h3>No employees found</h3>
+            <h3>{t('noEmployeesFound')}</h3>
             <p>
-              {searchTerm ? 'Try adjusting your search' : 'Add your first employee to get started'}
+              {searchTerm ? t('tryAdjustingSearch') : t('addFirstEmployee')}
             </p>
             {!searchTerm && (
               <button 
@@ -204,16 +204,16 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
                 onClick={() => setShowAddForm(true)}
               >
                 <Plus size={16} />
-                Add First Employee
+                {t('addFirstEmployee')}
               </button>
             )}
           </div>
         ) : (
           <div className="employees-table">
             <div className="table-header">
-              <div className="header-cell">Employee Name</div>
-              <div className="header-cell">Added Date</div>
-              <div className="header-cell">Actions</div>
+              <div className="header-cell">{t('employeeNameHeader')}</div>
+              <div className="header-cell">{t('addedDate')}</div>
+              <div className="header-cell">{t('actionsHeader')}</div>
             </div>
             {filteredEmployees.map((employee) => (
               <div key={employee.id} className="table-row">
@@ -230,7 +230,7 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
                     onClick={() => removeEmployee(employee.id, employee.name)}
                   >
                     <Trash2 size={14} />
-                    Remove
+                    {t('remove')}
                   </button>
                 </div>
               </div>
@@ -244,14 +244,14 @@ const EmployeeManager = ({ onEmployeesUpdated, onProceedToOrders }) => {
         <div className="proceed-section">
           <div className="proceed-content">
             <div className="proceed-info">
-              <h3>Ready to create orders?</h3>
-              <p>You have {employees.length} employee{employees.length !== 1 ? 's' : ''} in your team</p>
+              <h3>{t('readyToCreateOrders')}</h3>
+              <p>{t('employeesInTeam').replace('{count}', employees.length).replace('{plural}', employees.length !== 1 ? 's' : '')}</p>
             </div>
             <button 
               className="btn btn-success btn-lg"
               onClick={handleProceed}
             >
-              Proceed to Orders
+              {t('proceedToOrders')}
             </button>
           </div>
         </div>

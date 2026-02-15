@@ -14,7 +14,7 @@ const ModernHeader = ({
     const { t, language, toggleLanguage } = useLanguage();
 
     const navItems = [
-        { id: 'employees', icon: Users, label: 'Employees' },
+        { id: 'employees', icon: Users, label: t('employeesNav') },
         { id: 'home', icon: Home, label: t('foodItems') },
         { id: 'analytics', icon: BarChart3, label: t('analytics') },
     ];

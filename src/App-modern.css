@@ -703,42 +703,228 @@ select.form-control {
 .food-table {
   width: 100%;
   border-collapse: collapse;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .food-table th {
-  background: var(--background);
+  background: linear-gradient(135deg, var(--food-primary) 0%, var(--food-secondary) 100%);
+  color: white;
+  font-weight: 600;
   padding: var(--space-md);
   text-align: left;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.5px;
+  border: none;
 }
 
 .food-table td {
   padding: var(--space-md);
   border-bottom: 1px solid var(--border);
-  color: var(--text-primary);
-  font-size: 0.875rem;
+  transition: all var(--transition-normal);
 }
 
-.food-table tbody tr {
-  transition: background-color 0.2s ease;
+.food-table tr:hover td {
+  background: var(--primary-light);
 }
 
-.food-table tbody tr:hover {
-  background: var(--background);
-}
-
-.food-table tbody tr:last-child td {
+.food-table tr:last-child td {
   border-bottom: none;
 }
 
-.total-price {
+/* Table Controls */
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: var(--background);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.items-count, .selected-count {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--success);
+}
+
+.items-count {
+  background: var(--info);
+  color: white;
+}
+
+.selected-count {
+  background: var(--success);
+  color: white;
+}
+
+.controls-right {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Enhanced Table Content */
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.employee-name {
+  font-weight: 500;
+}
+
+.employee-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.employee-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--food-primary) 0%, var(--food-secondary) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.food-item-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.total-price, .final-total {
+  font-weight: 600;
+  color: var(--food-primary);
+}
+
+.delivery-fee {
+  color: var(--text-secondary);
+}
+
+.actions {
+  text-align: center;
+}
+
+.btn-icon {
+  background: var(--primary-light);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--space-xs);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-icon:hover {
+  background: var(--food-primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Enhanced Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl);
+  background: var(--background);
+  border-radius: var(--radius-xl);
+  border: 2px dashed var(--border);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: var(--space-lg);
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: var(--space-xl);
+}
+
+.empty-state .btn {
+  background: linear-gradient(135deg, var(--food-primary) 0%, var(--food-secondary) 100%);
+  color: white;
+  padding: var(--space-md) var(--space-xl);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all var(--transition-normal);
+}
+
+.empty-state .btn:hover {
+  background: linear-gradient(135deg, var(--food-secondary) 0%, var(--food-primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .table-controls {
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: stretch;
+  }
+  
+  .controls-left {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  
+  .controls-right {
+    justify-content: center;
+    margin-top: var(--space-md);
+  }
+  
+  .food-table {
+    font-size: 0.875rem;
+  }
+  
+  .food-table th {
+    padding: var(--space-sm);
+    font-size: 0.75rem;
+  }
+  
+  .food-table td {
+    padding: var(--space-sm);
+  }
+  
+  .employee-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+  
+  .employee-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 0.875rem;
+  }
 }
 
 /* Checkbox */

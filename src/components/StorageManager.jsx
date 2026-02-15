@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Download, Upload, Database, Trash2, RefreshCw, Info } from 'lucide-react';
 import { storage, backup, exportToFile, importFromFile } from '../utils/storage';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const StorageManager = ({ foodItems, onImportData, onClearData }) => {
+    const { t } = useLanguage();
     const [isImporting, setIsImporting] = useState(false);
     const [storageInfo, setStorageInfo] = useState(null);
     const [backups, setBackups] = useState([]);
@@ -26,7 +28,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
     const handleExport = () => {
         const success = exportToFile(foodItems, `food_items_${new Date().toISOString().split('T')[0]}.json`);
         if (success) {
-            alert('Data exported successfully!');
+            alert(t('dataExportedSuccessfully'));
         }
     };
 
@@ -40,14 +42,14 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
             const success = onImportData(data);
             
             if (success) {
-                alert('Data imported successfully!');
+                alert(t('dataImportedSuccessfully'));
                 loadStorageInfo();
                 loadBackups();
             } else {
-                alert('Invalid data format!');
+                alert(t('invalidDataFormat'));
             }
         } catch (error) {
-            alert('Failed to import file: ' + error.message);
+            alert(t('failedToImportFile') + error.message);
         } finally {
             setIsImporting(false);
             event.target.value = ''; // Reset file input
@@ -57,32 +59,32 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
     const handleCreateBackup = () => {
         const backupData = backup.create(foodItems, `Manual_${new Date().toISOString().split('T')[0]}`);
         if (backupData) {
-            alert('Backup created successfully!');
+            alert(t('backupCreatedSuccessfully'));
             loadBackups();
             loadStorageInfo();
         }
     };
 
     const handleRestoreBackup = (backupId) => {
-        if (window.confirm('Are you sure you want to restore this backup? Current data will be replaced.')) {
+        if (window.confirm(t('areYouSureRestoreBackup'))) {
             const data = backup.restore(backupId);
             if (data) {
                 const success = onImportData(data);
                 if (success) {
-                    alert('Backup restored successfully!');
+                    alert(t('backupRestoredSuccessfully'));
                     loadStorageInfo();
                 }
             } else {
-                alert('Failed to restore backup!');
+                alert(t('failedToRestoreBackup'));
             }
         }
     };
 
     const handleDeleteBackup = (backupId) => {
-        if (window.confirm('Are you sure you want to delete this backup?')) {
+        if (window.confirm(t('areYouSureDeleteBackup'))) {
             const success = backup.delete(backupId);
             if (success) {
-                alert('Backup deleted successfully!');
+                alert(t('backupDeletedSuccessfully'));
                 loadBackups();
                 loadStorageInfo();
             }
@@ -90,7 +92,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
     };
 
     const handleClearAll = () => {
-        if (window.confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+        if (window.confirm(t('areYouSureClearAllData'))) {
             onClearData();
             loadStorageInfo();
             loadBackups();
@@ -106,31 +108,31 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
             <div className="storage-header">
                 <h3>
                     <Database size={20} />
-                    Data Storage Management
+                    {t('dataStorageManagement')}
                 </h3>
                 <button 
                     className="btn btn-secondary"
                     onClick={() => setShowInfo(!showInfo)}
                 >
                     <Info size={16} />
-                    {showInfo ? 'Hide' : 'Show'} Info
+                    {showInfo ? t('hide') : t('show')} {t('info')}
                 </button>
             </div>
 
             {showInfo && storageInfo && (
                 <div className="storage-info">
                     <div className="info-card">
-                        <h4>Storage Usage</h4>
-                        <p>Total Size: {storageInfo.totalSizeFormatted}</p>
-                        <p>Food Items: {foodItems.length}</p>
-                        <p>Backups: {backups.length}</p>
+                        <h4>{t('storageUsage')}</h4>
+                        <p>{t('totalSize')}: {storageInfo.totalSizeFormatted}</p>
+                        <p>{t('foodItems')}: {foodItems.length}</p>
+                        <p>{t('backups')}: {backups.length}</p>
                     </div>
                 </div>
             )}
 
             <div className="storage-actions">
                 <div className="action-group">
-                    <h4>Export/Import</h4>
+                    <h4>{t('exportImport')}</h4>
                     <div className="action-buttons">
                         <button 
                             className="btn btn-primary"
@@ -138,11 +140,11 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                             disabled={foodItems.length === 0}
                         >
                             <Download size={16} />
-                            Export Data
+                            {t('exportData')}
                         </button>
                         <label className="btn btn-secondary">
                             <Upload size={16} />
-                            {isImporting ? 'Importing...' : 'Import Data'}
+                            {isImporting ? t('importing') : t('importData')}
                             <input
                                 type="file"
                                 accept=".json"
@@ -155,7 +157,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                 </div>
 
                 <div className="action-group">
-                    <h4>Backups</h4>
+                    <h4>{t('backupManagement')}</h4>
                     <div className="action-buttons">
                         <button 
                             className="btn btn-secondary"
@@ -163,7 +165,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                             disabled={foodItems.length === 0}
                         >
                             <RefreshCw size={16} />
-                            Create Backup
+                            {t('createBackup')}
                         </button>
                         <button 
                             className="btn btn-danger"
@@ -171,7 +173,7 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
                             disabled={foodItems.length === 0}
                         >
                             <Trash2 size={16} />
-                            Clear All Data
+                            {t('clearAllData')}
                         </button>
                     </div>
                 </div>
@@ -179,27 +181,27 @@ const StorageManager = ({ foodItems, onImportData, onClearData }) => {
 
             {backups.length > 0 && (
                 <div className="backups-list">
-                    <h4>Available Backups</h4>
+                    <h4>{t('availableBackups')}</h4>
                     <div className="backups-grid">
                         {backups.map(backup => (
                             <div key={backup.id} className="backup-card">
                                 <div className="backup-info">
                                     <h5>{backup.name}</h5>
                                     <p>{formatDate(backup.timestamp)}</p>
-                                    <p>Items: {backup.data?.length || 0}</p>
+                                    <p>{t('items')}: {backup.data?.length || 0}</p>
                                 </div>
                                 <div className="backup-actions">
                                     <button 
                                         className="btn btn-secondary btn-sm"
                                         onClick={() => handleRestoreBackup(backup.id)}
                                     >
-                                        Restore
+                                        {t('restore')}
                                     </button>
                                     <button 
                                         className="btn btn-danger btn-sm"
                                         onClick={() => handleDeleteBackup(backup.id)}
                                     >
-                                        Delete
+                                        {t('delete')}
                                     </button>
                                 </div>
                             </div>
