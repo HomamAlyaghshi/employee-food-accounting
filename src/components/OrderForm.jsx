@@ -147,7 +147,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
     );
 
     if (validEmployees.length === 0) {
-      alert(t('pleaseAddEmployeeWithProducts'));
+      alert(t('orders.pleaseAddEmployeeWithProducts'));
       return;
     }
 
@@ -172,7 +172,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
   return (
     <div className="card">
       <div className={`form-header ${isViewMode ? 'view-mode' : (currentOrder ? 'edit-mode' : 'create-mode')}`}>
-        <h2>{isViewMode ? t('orderDetails') : (currentOrder ? t('editOrder') : t('createNewOrder'))}</h2>
+        <h2>{isViewMode ? t('orders.orderDetails') : (currentOrder ? t('orders.editOrder') : t('orders.createNewOrder'))}</h2>
         {isViewMode && (
           <button type="button" className="btn btn-ghost btn-sm" onClick={onReset}>
             <X size={16} />
@@ -182,21 +182,21 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="orderName">{t('orderName')}</label>
+          <label htmlFor="orderName">{t('orders.orderName')}</label>
           <input
             type="text"
             id="orderName"
             value={orderName}
             onChange={(e) => setOrderName(e.target.value)}
             className="form-control"
-            placeholder={t('orderNamePlaceholder')}
+            placeholder={t('orders.orderNamePlaceholder')}
             disabled={isViewMode}
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="deliveryFee">{t('deliveryFee')}</label>
+          <label htmlFor="deliveryFee">{t('orders.deliveryFee')}</label>
           <input
             type="number"
             id="deliveryFee"
@@ -211,11 +211,11 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
 
         <div className="employees-section">
           <div className="section-header">
-            <h3>{t('products')}</h3>
+            <h3>{t('orders.products')}</h3>
             {!isViewMode && (
               <button type="button" className="btn btn-secondary btn-sm" onClick={addNewEmployee}>
                 <Plus size={14} />
-                {t('addEmployeeToOrder')}
+                {t('orders.addEmployeeToOrder')}
               </button>
             )}
           </div>
@@ -232,7 +232,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                     disabled={isViewMode}
                     required
                   >
-                    <option value="">{t('selectEmployee')}</option>
+                    <option value="">{t('common.selectEmployee')}</option>
                     {getAllEmployees().map((emp) => (
                       <option key={emp} value={emp}>
                         {emp}
@@ -253,7 +253,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
 
               <div className="products-section">
                 <div className="products-header">
-                  <h4>{t('products')}</h4>
+                  <h4>{t('orders.products')}</h4>
                   {!isViewMode && (
                     <button
                       type="button"
@@ -261,7 +261,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                       onClick={() => addProduct(empIndex)}
                     >
                       <Plus size={12} />
-                      {t('addProduct')}
+                      {t('orders.addProduct')}
                     </button>
                   )}
                 </div>
@@ -275,7 +275,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                         updateProduct(empIndex, prodIndex, "name", e.target.value)
                       }
                       className="form-control"
-                      placeholder={t('productName')}
+                      placeholder={t('orders.productName')}
                       disabled={isViewMode}
                       required
                     />
@@ -286,7 +286,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                         updateProduct(empIndex, prodIndex, "quantity", e.target.value)
                       }
                       className="form-control"
-                      placeholder={t('qty')}
+                      placeholder={t('common.qty')}
                       min="1"
                       disabled={isViewMode}
                       required
@@ -298,7 +298,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                         updateProduct(empIndex, prodIndex, "pricePerItem", e.target.value)
                       }
                       className="form-control"
-                      placeholder={t('price')}
+                      placeholder={t('common.price')}
                       min="0"
                       step="0.01"
                       disabled={isViewMode}
@@ -325,32 +325,32 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
 
         {totals.uniqueEmployees.length > 0 && (
           <div className="order-summary">
-            <h3>{t('orderSummary')}</h3>
+            <h3>{t('orders.orderSummary')}</h3>
 
             <div className="summary-grid">
               <div className="summary-card">
-                <h4>{t('subtotal')}</h4>
+                <h4>{t('common.subtotal')}</h4>
                 <p>${totals.orderSubtotal.toFixed(2)}</p>
               </div>
 
               <div className="summary-card">
-                <h4>{t('deliveryFee')}</h4>
+                <h4>{t('orders.delivery')}</h4>
                 <p>${deliveryFee.toFixed(2)}</p>
               </div>
 
               <div className="summary-card">
-                <h4>{t('deliveryFeePerPerson')}</h4>
+                <h4>{t('orders.deliveryFeePerPerson')}</h4>
                 <p>${totals.deliveryTaxPerEmployee.toFixed(2)}</p>
               </div>
 
               <div className="summary-card highlight">
-                <h4>{t('totalOrderAmount')}</h4>
+                <h4>{t('orders.totalOrderAmount')}</h4>
                 <p>${totals.finalOrderTotal.toFixed(2)}</p>
               </div>
             </div>
 
             <div className="employee-breakdown">
-              <h4>{t('employeeBreakdown')}</h4>
+              <h4>{t('orders.employeeBreakdown')}</h4>
 
               {employees
                 .filter((emp) => emp.employeeId)
@@ -363,7 +363,7 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
                     <div key={employee.employeeId} className="breakdown-item">
                       <span className="employee-name">{employee.employeeId}:</span>
                       <span className="breakdown-details">
-                        {t('food')}: ${food.toFixed(2)} + {t('delivery')}: ${Number(employee.deliveryTax || 0).toFixed(2)} =
+                        {t('common.food')}: ${food.toFixed(2)} + {t('orders.delivery')}: ${Number(employee.deliveryTax || 0).toFixed(2)} =
                         <strong> ${(food + Number(employee.deliveryTax || 0)).toFixed(2)}</strong>
                       </span>
                     </div>
@@ -376,11 +376,11 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
         {!isViewMode && (
           <div className="form-actions">
             <button type="submit" className="btn btn-primary">
-              {currentOrder ? t('updateOrder') : t('createOrder')}
+              {currentOrder ? t('orders.updateOrder') : t('orders.createOrder')}
             </button>
 
             <button type="button" className="btn btn-ghost" onClick={handleReset}>
-              {t('clearForm')}
+              {t('orders.clearForm')}
             </button>
           </div>
         )}
