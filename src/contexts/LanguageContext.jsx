@@ -38,8 +38,10 @@ const translations = {
             show: 'Show',
             info: 'Info',
             items: 'Items',
+            totalItems: 'Total Items',
             restore: 'Restore',
-            importing: 'Importing...'
+            importing: 'Importing...',
+            exportData: 'Export Data',
         },
 
         // Navigation
@@ -239,8 +241,10 @@ const translations = {
             show: 'عرض',
             info: 'معلومات',
             items: 'العناصر',
+            totalItems: 'إجمالي العناصر',
             restore: 'استعادة',
-            importing: 'جاري الاستيراد...'
+            importing: 'جاري الاستيراد...',
+            exportData: 'تصدير البيانات',
         },
 
         // Navigation
