@@ -31,7 +31,6 @@ const AppContent = () => {
     const [editingOrder, setEditingOrder] = useState(null);
     const [showOrderForm, setShowOrderForm] = useState(false);
     const [isViewMode, setIsViewMode] = useState(false);
-    const [employees, setEmployees] = useState([]);
 
     const { orders, createOrder, updateOrder, deleteOrder, clearAllOrders, getAllFoodItems } = useOrders();
     const { errorMessage, showError } = useError();
@@ -40,7 +39,6 @@ const AppContent = () => {
     const allFoodItems = getAllFoodItems();
 
     const handleEmployeesUpdated = (updatedEmployees) => {
-        setEmployees(updatedEmployees);
         // Update localStorage for OrderForm to use
         localStorage.setItem('customEmployees', JSON.stringify(updatedEmployees));
     };
@@ -121,16 +119,6 @@ const AppContent = () => {
                 setSelectedItems([]);
             }
         });
-    };
-
-    const handleClearData = () => {
-        clearAllOrders();
-        setSelectedItems([]);
-    };
-
-    const handleImportData = (data) => {
-        // Handle import if needed
-        return true;
     };
 
     const { employeeTotalsMap, grandTotal, employeeDeliveryFees } = calculateTotals(allFoodItems);

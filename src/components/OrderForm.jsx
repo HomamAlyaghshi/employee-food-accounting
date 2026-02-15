@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Plus, Trash2, User, Package, X } from "lucide-react";
-import { EMPLOYEES } from "../constants/employees";
+import { Plus, Trash2, User, X } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 
 const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false }) => {
@@ -11,9 +10,6 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
   const [employees, setEmployees] = useState(currentOrder?.employees || []);
   const [selectedEmployeeIndex, setSelectedEmployeeIndex] = useState(-1);
   const [customEmployees, setCustomEmployees] = useState([]);
-
-  const currentEmployee =
-    selectedEmployeeIndex >= 0 ? employees[selectedEmployeeIndex] : null;
 
   useEffect(() => {
     // Load custom employees from localStorage
@@ -46,10 +42,6 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
 
   const getAllEmployees = () => {
     return [...customEmployees];
-  };
-
-  const selectEmployee = (index) => {
-    setSelectedEmployeeIndex(index);
   };
 
   const updateEmployee = (index, field, value) => {

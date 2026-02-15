@@ -10,17 +10,6 @@ const OrderList = ({
     onCreateNewOrder 
 }) => {
     const { t } = useLanguage();
-    const [expandedOrders, setExpandedOrders] = useState(new Set());
-
-    const toggleOrderExpansion = (orderId) => {
-        const newExpanded = new Set(expandedOrders);
-        if (newExpanded.has(orderId)) {
-            newExpanded.delete(orderId);
-        } else {
-            newExpanded.add(orderId);
-        }
-        setExpandedOrders(newExpanded);
-    };
 
     const calculateOrderTotals = (order) => {
         const subtotal = order.employees?.reduce((sum, employee) => {
