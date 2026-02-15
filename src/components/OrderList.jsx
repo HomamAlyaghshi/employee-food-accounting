@@ -10,6 +10,17 @@ const OrderList = ({
     onCreateNewOrder 
 }) => {
     const { t } = useLanguage();
+    const [expandedOrders, setExpandedOrders] = useState(new Set());
+
+    const toggleOrderExpansion = (orderId) => {
+        const newExpanded = new Set(expandedOrders);
+        if (newExpanded.has(orderId)) {
+            newExpanded.delete(orderId);
+        } else {
+            newExpanded.add(orderId);
+        }
+        setExpandedOrders(newExpanded);
+    };
 
     const calculateOrderTotals = (order) => {
         const subtotal = order.employees?.reduce((sum, employee) => {
@@ -58,7 +69,7 @@ const OrderList = ({
                         
                         return (
                             <div key={order.id} className="order-card">
-                                <div className="order-header">
+                                <div className="order-header" onClick={() => toggleOrderExpansion(order.id)}>
                                     <div className="order-info">
                                         <h3>{order.name}</h3>
                                         <p className="order-date">{formatDate(order.timestamp)}</p>
