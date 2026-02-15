@@ -44,6 +44,7 @@ const AppContent = () => {
         // Update localStorage for OrderForm to use
         localStorage.setItem('customEmployees', JSON.stringify(updatedEmployees));
     };
+    
 
     const handleProceedToOrders = () => {
         setCurrentPage('home');
