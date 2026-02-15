@@ -11,8 +11,6 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
   const [employees, setEmployees] = useState(currentOrder?.employees || []);
   const [selectedEmployeeIndex, setSelectedEmployeeIndex] = useState(-1);
   const [customEmployees, setCustomEmployees] = useState([]);
-  const [newEmployeeName, setNewEmployeeName] = useState("");
-  const [showAddEmployee, setShowAddEmployee] = useState(false);
 
   const currentEmployee =
     selectedEmployeeIndex >= 0 ? employees[selectedEmployeeIndex] : null;
@@ -46,20 +44,8 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
     setSelectedEmployeeIndex(employees.length);
   };
 
-  const addCustomEmployee = () => {
-    if (newEmployeeName.trim() && !customEmployees.includes(newEmployeeName.trim())) {
-      setCustomEmployees(prev => [...prev, newEmployeeName.trim()]);
-      setNewEmployeeName("");
-      setShowAddEmployee(false);
-    }
-  };
-
-  const removeCustomEmployee = (employeeName) => {
-    setCustomEmployees(prev => prev.filter(emp => emp !== employeeName));
-  };
-
   const getAllEmployees = () => {
-    return [...customEmployees, ...EMPLOYEES];
+    return [...customEmployees];
   };
 
   const selectEmployee = (index) => {
@@ -233,79 +219,14 @@ const OrderForm = ({ onCreateOrder, onReset, currentOrder, isViewMode = false })
 
         <div className="employees-section">
           <div className="section-header">
-            <h3>Employees & Products</h3>
-            <div className="section-header-actions">
-              {!isViewMode && (
-                <button 
-                  type="button" 
-                  className="btn btn-secondary btn-sm" 
-                  onClick={() => setShowAddEmployee(true)}
-                >
-                  <Plus size={14} />
-                  Add Employee Name
-                </button>
-              )}
-              {!isViewMode && (
-                <button type="button" className="btn btn-secondary btn-sm" onClick={addNewEmployee}>
-                  <Plus size={14} />
-                  Add Employee to Order
-                </button>
-              )}
-            </div>
+            <h3>Products</h3>
+            {!isViewMode && (
+              <button type="button" className="btn btn-secondary btn-sm" onClick={addNewEmployee}>
+                <Plus size={14} />
+                Add Employee to Order
+              </button>
+            )}
           </div>
-
-          {/* Custom Employees Management */}
-          {showAddEmployee && (
-            <div className="custom-employee-input">
-              <input
-                type="text"
-                value={newEmployeeName}
-                onChange={(e) => setNewEmployeeName(e.target.value)}
-                placeholder="Enter employee name"
-                className="form-control"
-                onKeyPress={(e) => e.key === 'Enter' && addCustomEmployee()}
-              />
-              <button 
-                type="button" 
-                className="btn btn-primary btn-sm"
-                onClick={addCustomEmployee}
-              >
-                Add
-              </button>
-              <button 
-                type="button" 
-                className="btn btn-ghost btn-sm"
-                onClick={() => {
-                  setShowAddEmployee(false);
-                  setNewEmployeeName("");
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-
-          {/* Custom Employees List */}
-          {customEmployees.length > 0 && (
-            <div className="custom-employee-list">
-              <h4>Custom Employees:</h4>
-              <div className="employee-tags">
-                {customEmployees.map((emp, index) => (
-                  <span key={index} className="employee-tag">
-                    {emp}
-                    {!isViewMode && (
-                      <button
-                        type="button"
-                        onClick={() => removeCustomEmployee(emp)}
-                      >
-                        ×
-                      </button>
-                    )}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
 
           {employees.map((employee, empIndex) => (
             <div key={empIndex} className="employee-card">

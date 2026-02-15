@@ -28,6 +28,8 @@ const DetailedStats = ({ employeeData }) => {
                                         <div className="stat-label">Order Count</div>
                                         <div className="stat-value">{data.orderCount}</div>
                                     </div>
+                                </div>
+                                <div className="stat-row">
                                     <div className="stat-item">
                                         <div className="stat-label">Avg Order Value</div>
                                         <div className="stat-value">${averageOrderValue.toFixed(2)}</div>

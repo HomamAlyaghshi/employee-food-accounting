@@ -58,7 +58,7 @@ const ModernHeader = ({
 
                     <div className="theme-language-controls">
                         <button
-                            className="nav-button"
+                            className="nav-button theme-btn"
                             onClick={toggleLanguage}
                         >
                             <Globe size={18} />
@@ -66,7 +66,7 @@ const ModernHeader = ({
                         </button>
                         
                         <button
-                            className="nav-button"
+                            className="nav-button theme-btn"
                             onClick={toggleTheme}
                         >
                             {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
